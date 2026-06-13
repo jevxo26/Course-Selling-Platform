@@ -57,7 +57,7 @@ export const shopApi = baseApi.injectEndpoints({
       { userId: number; shopId: number; amount?: number }
     >({
       query: (data) => ({
-        url: "/shop-purchases/buy/bkash",
+        url: "/shop-purchases/buy/zinipay",
         method: "POST",
         body: data,
       }),

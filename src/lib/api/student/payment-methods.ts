@@ -1,6 +1,6 @@
 import { baseApi, toQueryString } from "../baseApi";
 
-export type PaymentMethodType = "bkash" | "nagad" | "bank" | "binance" | "visa";
+export type PaymentMethodType = "zinipay" | "nagad" | "bank" | "binance" | "visa";
 export type PaymentMethodStatus = "pending" | "approved" | "rejected";
 
 export type StudentPaymentMethodsMySearchQuery = {

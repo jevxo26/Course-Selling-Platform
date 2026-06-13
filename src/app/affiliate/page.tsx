@@ -53,7 +53,7 @@ const steps = [
   {
     num: "03",
     title: "Earn commissions",
-    desc: "Earn up to 40% on every purchase. Get paid monthly via bKash, Nagad, or bank transfer.",
+    desc: "Earn up to 40% on every purchase. Get paid monthly via ZiniPay, Nagad, or bank transfer.",
   },
 ];
 

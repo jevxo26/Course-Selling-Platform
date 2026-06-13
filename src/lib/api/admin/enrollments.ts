@@ -9,7 +9,7 @@ export type EnrollmentListQuery = {
 export type AdminEnrollmentsResponse = Record<string, any>;
 export type AdminEnrollmentResponse = Record<string, any>;
 
-export type AdminEnrollmentPayBkashPaymentRequest = Record<string, any>;
+export type AdminEnrollmentPayZinipayPaymentRequest = Record<string, any>;
 export type AdminEnrollmentManualPaymentRequest = Record<string, any>;
 
 export const adminEnrollmentsApi = baseApi.injectEndpoints({
@@ -35,9 +35,9 @@ export const adminEnrollmentsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Enrollment"],
     }),
-    adminEnrollmentsPayBkashPayment: build.mutation<
+    adminEnrollmentsPayZinipayPayment: build.mutation<
       AdminEnrollmentResponse,
-      AdminEnrollmentPayBkashPaymentRequest
+      AdminEnrollmentPayZinipayPaymentRequest
     >({
       query: (body) => ({
         url: "/enrollments/pay",
@@ -66,6 +66,6 @@ export const {
   useLazyAdminEnrollmentsQuery,
   useAdminEnrollmentQuery,
   useLazyAdminEnrollmentQuery,
-  useAdminEnrollmentsPayBkashPaymentMutation,
+  useAdminEnrollmentsPayZinipayPaymentMutation,
   useAdminEnrollmentsManualPaymentMutation,
 } = adminEnrollmentsApi;

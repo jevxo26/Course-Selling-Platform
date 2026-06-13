@@ -17,12 +17,10 @@ import {
   CreditCard,
   Hash,
   Activity,
-  RefreshCw,
-  GraduationCap,
 } from "lucide-react";
 import {
   useAdminEnrollmentsManualPaymentMutation,
-  useAdminEnrollmentsPayBkashPaymentMutation,
+  useAdminEnrollmentsPayZinipayPaymentMutation,
   useAdminEnrollmentsQuery,
   useLazyAdminEnrollmentQuery,
 } from "@/lib/api/admin/enrollments";
@@ -96,18 +94,28 @@ function normalizeEnrollment(raw: any): UiEnrollment | null {
     String(
       studentObj?.name ?? studentObj?.email ?? raw?.userName ?? "",
     ).trim() || "—";
+
   const studentEmail = String(studentObj?.email ?? "").trim() || "—";
   const studentId =
-    studentObj?.id ?? studentObj?._id ?? raw?.studentId ?? raw?.userId ?? null;
+    studentObj?.id ??
+    studentObj?._id ??
+    raw?.studentId ??
+    raw?.userId ??
+    null;
 
-  const courseId = raw?.course?.id ?? raw?.course?._id ?? raw?.courseId ?? null;
+  const courseId =
+    raw?.course?.id ??
+    raw?.course?._id ??
+    raw?.courseId ??
+    null;
+
   const course =
     String(
       raw?.course?.title ??
-        raw?.course?.name ??
-        raw?.courseTitle ??
-        raw?.title ??
-        "",
+      raw?.course?.name ??
+      raw?.courseTitle ??
+      raw?.title ??
+      "",
     ).trim() || "—";
 
   const amount =
@@ -138,7 +146,6 @@ function normalizeEnrollment(raw: any): UiEnrollment | null {
   };
 }
 
-// ── Modal Shell (unchanged) ─────────────────────────────────────────────────
 function ModalShell({ title, subtitle, loading, onClose, children }: any) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -168,8 +175,9 @@ function ModalShell({ title, subtitle, loading, onClose, children }: any) {
   );
 }
 
-// ── JSON Body Modal (unchanged) ─────────────────────────────────────────────
+/* Keep your existing JsonBodyModal and DetailsModal components (unchanged) */
 function JsonBodyModal({ ...props }: any) {
+  // ... your existing JsonBodyModal code
   const [text, setText] = useState(JSON.stringify(props.initialBody, null, 2));
   const [error, setError] = useState<string | null>(null);
 
@@ -198,9 +206,7 @@ function JsonBodyModal({ ...props }: any) {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className={`w-full min-h-[220px] px-3 py-2 text-[12px] border rounded-xl font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
-              error ? "border-red-400 bg-red-50" : "border-gray-200"
-            }`}
+            className={`w-full min-h-[220px] px-3 py-2 text-[12px] border rounded-xl font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300 ${error ? "border-red-400 bg-red-50" : "border-gray-200"}`}
           />
           {error && <p className="text-[10px] text-red-500 mt-1">{error}</p>}
         </div>
@@ -231,21 +237,11 @@ function JsonBodyModal({ ...props }: any) {
   );
 }
 
-// ── Manual Enroll Modal (unchanged) ─────────────────────────────────────────
-function ManualEnrollModal({
-  title,
-  subtitle,
-  loading,
-  onClose,
-  onSubmit,
-  initialBody,
-}: any) {
+function ManualEnrollModal({ title, subtitle, loading, onClose, onSubmit, initialBody }: any) {
   const [courseId, setCourseId] = useState(initialBody?.courseId || "");
   const [studentId, setStudentId] = useState(initialBody?.studentId || "");
   const [amount, setAmount] = useState(initialBody?.amount || "");
-  const [paymentMethod, setPaymentMethod] = useState(
-    initialBody?.paymentMethod || "cash",
-  );
+  const [paymentMethod, setPaymentMethod] = useState(initialBody?.paymentMethod || "cash");
 
   const coursesQuery = useAdminCoursesQuery({ limit: 1000 });
   const usersQuery = useAdminUsersQuery();
@@ -290,13 +286,9 @@ function ManualEnrollModal({
             value={courseId}
             onChange={(e) => {
               setCourseId(e.target.value);
-              const selectedCourse = courses.find(
-                (c: any) => String(c.id || c._id) === String(e.target.value),
-              );
+              const selectedCourse = courses.find((c: any) => String(c.id || c._id) === String(e.target.value));
               if (selectedCourse && !amount) {
-                setAmount(
-                  selectedCourse.discountPrice || selectedCourse.price || "",
-                );
+                setAmount(selectedCourse.discountPrice || selectedCourse.price || "");
               }
             }}
             disabled={coursesQuery.isLoading}
@@ -309,9 +301,7 @@ function ManualEnrollModal({
               </option>
             ))}
           </select>
-          {coursesQuery.isLoading && (
-            <p className="text-[10px] text-gray-500 mt-1">Loading courses...</p>
-          )}
+          {coursesQuery.isLoading && <p className="text-[10px] text-gray-500 mt-1">Loading courses...</p>}
         </div>
         <div>
           <label className="block text-[11px] font-bold text-gray-700 mb-1.5">
@@ -330,9 +320,7 @@ function ManualEnrollModal({
               </option>
             ))}
           </select>
-          {usersQuery.isLoading && (
-            <p className="text-[10px] text-gray-500 mt-1">Loading users...</p>
-          )}
+          {usersQuery.isLoading && <p className="text-[10px] text-gray-500 mt-1">Loading users...</p>}
         </div>
 
         <div>
@@ -357,7 +345,7 @@ function ManualEnrollModal({
             className="w-full px-3 py-2 text-[13px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
           >
             <option value="cash">Cash</option>
-            <option value="bkash">bKash</option>
+            <option value="zinipay">Zinipay</option>
             <option value="nagad">Nagad</option>
             <option value="rocket">Rocket</option>
             <option value="bank">Bank Transfer</option>
@@ -391,7 +379,6 @@ function ManualEnrollModal({
   );
 }
 
-// ── Details Modal (unchanged) ───────────────────────────────────────────────
 function DetailsModal({
   id,
   open,
@@ -431,40 +418,90 @@ function DetailsModal({
           {JSON.stringify(data, null, 2)}
         </pre>
       ) : (
-        <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
+        <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
           <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-2xl">
             <div>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">
-                Status
-              </p>
-              <span
-                className={`inline-flex px-3 py-1 rounded-full text-[12px] font-extrabold uppercase tracking-wider ${
-                  enr.status === "completed" || enr.status === "paid"
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-amber-100 text-amber-700"
-                }`}
-              >
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Status</p>
+              <span className={`inline-flex px-3 py-1 rounded-full text-[12px] font-extrabold uppercase tracking-wider ${enr.status === "completed" || enr.status === "paid" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
                 {enr.status}
               </span>
             </div>
             <div className="text-right">
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">
-                Amount
-              </p>
-              <p className="text-lg font-extrabold text-gray-900">
-                ৳{enr.amount}
-              </p>
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Amount</p>
+              <p className="text-lg font-extrabold text-gray-900">৳{enr.amount}</p>
             </div>
           </div>
-          {/* Rest of details (unchanged) */}
-          {/* ... */}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 border border-gray-100 rounded-2xl bg-white">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
+                <User className="h-4 w-4 text-indigo-500" />
+                <h3 className="text-[12px] font-extrabold text-gray-900 tracking-wide uppercase">Student Info</h3>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold mb-0.5">NAME</p>
+                  <p className="text-[13px] font-semibold text-gray-800">{enr.student}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold mb-0.5">EMAIL</p>
+                  <p className="text-[13px] font-semibold text-gray-800 break-all">{enr.studentEmail}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold mb-0.5">ID</p>
+                  <p className="text-[12px] font-mono text-gray-600 break-all">{enr.studentId || "—"}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border border-gray-100 rounded-2xl bg-white">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
+                <BookOpen className="h-4 w-4 text-emerald-500" />
+                <h3 className="text-[12px] font-extrabold text-gray-900 tracking-wide uppercase">Course Info</h3>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold mb-0.5">COURSE TITLE</p>
+                  <p className="text-[13px] font-semibold text-gray-800">{enr.course}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 font-bold mb-0.5">COURSE ID</p>
+                  <p className="text-[12px] font-mono text-gray-600 break-all">{enr.courseId || "—"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 border border-gray-100 rounded-2xl bg-white">
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
+              <CreditCard className="h-4 w-4 text-amber-500" />
+              <h3 className="text-[12px] font-extrabold text-gray-900 tracking-wide uppercase">Payment & System</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold mb-0.5">PAYMENT METHOD</p>
+                <p className="text-[13px] font-semibold text-gray-800 capitalize">{enr.paymentMethod}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold mb-0.5">TRANSACTION ID</p>
+                <p className="text-[12px] font-mono text-gray-600 break-all">{enr.transactionId || "—"}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold mb-0.5">ENROLLMENT TYPE</p>
+                <p className="text-[13px] font-semibold text-gray-800">{enr.isManual ? "Manual" : "System"}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-400 font-bold mb-0.5">DATE CREATED</p>
+                <p className="text-[13px] font-semibold text-gray-800">{enr.createdAt}</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </ModalShell>
   );
 }
 
-// ── Main Page ───────────────────────────────────────────────────────────────
 export default function AdminEnrollmentsPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -488,44 +525,43 @@ export default function AdminEnrollmentsPage() {
     totalFromApi ? Math.ceil(totalFromApi / PAGE_SIZE) : 1,
   );
   const [detailsId, setDetailsId] = useState<number | string | null>(null);
-  const [bkashBody, setBkashBody] = useState<{
-    courseId: number | string | null;
-    studentId: number | string | null;
-  } | null>(null);
-  const [manualBody, setManualBody] = useState<{
-    courseId: number | string | null;
-    studentId: number | string | null;
-  } | null>(null);
-  const [payBkash, { isLoading: isPayingBkash }] =
-    useAdminEnrollmentsPayBkashPaymentMutation();
+  const [zinipayBody, setZinipayBody] = useState<
+    { courseId: number | string | null; studentId: number | string | null } | null
+  >(null);
+  const [manualBody, setManualBody] = useState<
+    { courseId: number | string | null; studentId: number | string | null } | null
+  >(null);
+  const [payZinipay, { isLoading: isPayingZinipay }] =
+    useAdminEnrollmentsPayZinipayPaymentMutation();
   const [manualPayment, { isLoading: isManualPaying }] =
     useAdminEnrollmentsManualPaymentMutation();
 
   return (
     <>
-      {/* Modals (unchanged) */}
       {detailsId !== null && (
         <DetailsModal id={detailsId} open onClose={() => setDetailsId(null)} />
       )}
-      {bkashBody !== null && (
+      {zinipayBody !== null && (
         <JsonBodyModal
-          title="Pay (Bkash)"
+          title="Pay (Zinipay)"
           subtitle="POST /enrollments/pay"
-          loading={isPayingBkash}
+          loading={isPayingZinipay}
           initialBody={{
-            courseId: bkashBody.courseId,
-            studentId: bkashBody.studentId,
+            courseId: zinipayBody.courseId,
+            studentId: zinipayBody.studentId,
           }}
-          onClose={() => setBkashBody(null)}
+          onClose={() => setZinipayBody(null)}
           onSubmit={async (body: any) => {
             const payload: any = { ...body };
             delete payload.enrollmentId;
-            if (payload.courseId !== undefined && payload.courseId !== null)
+            if (payload.courseId !== undefined && payload.courseId !== null) {
               payload.courseId = Number(payload.courseId);
-            if (payload.studentId !== undefined && payload.studentId !== null)
+            }
+            if (payload.studentId !== undefined && payload.studentId !== null) {
               payload.studentId = Number(payload.studentId);
-            await payBkash(payload).unwrap();
-            setBkashBody(null);
+            }
+            await payZinipay(payload).unwrap();
+            setZinipayBody(null);
             list.refetch();
           }}
         />
@@ -543,57 +579,41 @@ export default function AdminEnrollmentsPage() {
           onSubmit={async (body: any) => {
             const payload: any = { ...body };
             delete payload.enrollmentId;
-            if (
-              payload.courseId !== undefined &&
-              payload.courseId !== null &&
-              payload.courseId !== ""
-            )
+            if (payload.courseId !== undefined && payload.courseId !== null && payload.courseId !== "") {
               payload.courseId = Number(payload.courseId);
-            else delete payload.courseId;
-            if (
-              payload.studentId !== undefined &&
-              payload.studentId !== null &&
-              payload.studentId !== ""
-            )
+            } else {
+              delete payload.courseId;
+            }
+            if (payload.studentId !== undefined && payload.studentId !== null && payload.studentId !== "") {
               payload.studentId = Number(payload.studentId);
-            else delete payload.studentId;
-            if (
-              payload.amount !== undefined &&
-              payload.amount !== null &&
-              payload.amount !== ""
-            )
+            } else {
+              delete payload.studentId;
+            }
+            if (payload.amount !== undefined && payload.amount !== null && payload.amount !== "") {
               payload.amount = Number(payload.amount);
-            if (!payload.paymentMethod) payload.paymentMethod = "cash";
+            }
+            if (!payload.paymentMethod) {
+              payload.paymentMethod = "cash";
+            }
             await manualPayment(payload).unwrap();
             setManualBody(null);
             list.refetch();
           }}
         />
       )}
-
-      <div className="min-h-screen  bg-white p-3 sm:p-4 lg:p-5">
-        {/* Header */}
-        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5 mb-6">
-          {/* Left */}
-          <div className="flex items-center gap-4">
-            <div className="relative flex-shrink-0">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-200">
-                <GraduationCap className="w-7 h-7 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white animate-pulse" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
-                Enrollments
-              </h1>
-              <p className="text-sm text-gray-500 font-medium mt-1">
-                Manage student enrollments and course access.
-              </p>
-            </div>
+      <div className="min-h-screen bg-gray-50 p-3 sm:p-4 lg:p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+          <div>
+            <h1 className="text-[18px] font-extrabold text-gray-900 tracking-tight">
+              Enrollments
+            </h1>
+            <p className="text-[11px] text-gray-400 mt-0.5 font-medium">
+              GET /enrollments · GET /enrollments/:id · POST
+              /enrollments/pay · POST /enrollments/manual
+            </p>
           </div>
 
-          {/* Right */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex items-center gap-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
@@ -603,28 +623,25 @@ export default function AdminEnrollmentsPage() {
                   setPage(1);
                 }}
                 placeholder="Search student or course..."
-                className="w-full sm:w-[300px] h-11 pl-10 pr-4 rounded-2xl border border-gray-200 bg-white text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 shadow-sm"
+                className="w-[280px] h-10 pl-10 pr-3 rounded-xl border border-gray-200 bg-white text-[13px] font-semibold placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
             </div>
             <button
               onClick={() => list.refetch()}
-              className="h-11 px-4 rounded-2xl bg-white border border-gray-200 text-[13px] font-semibold text-gray-700 hover:bg-gray-50 shadow-sm flex items-center justify-center gap-2"
+              className="h-10 px-4 rounded-xl bg-white border border-gray-200 text-[13px] font-bold text-gray-700 hover:bg-gray-50"
             >
-              <RefreshCw size={15} />
               Refresh
             </button>
             <button
               onClick={() => setManualBody({ courseId: "", studentId: "" })}
-              className="h-11 px-5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-[13px] font-semibold text-white hover:opacity-95 shadow-lg shadow-indigo-200 flex items-center justify-center gap-2"
+              className="h-10 px-4 rounded-xl bg-indigo-600 border border-transparent text-[13px] font-bold text-white hover:bg-indigo-700 flex items-center gap-2"
             >
-              <Wallet size={16} />
-              Manual Enroll
+              <Wallet size={16} /> Manual Enroll
             </button>
           </div>
         </div>
 
-        {/* ── TABLE for md+ ── */}
-        <div className="hidden md:block bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -693,38 +710,38 @@ export default function AdminEnrollmentsPage() {
                       </td>
                       <td className="px-4 py-4">
                         <span
-                          className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold ${
-                            e.status === "completed" || e.status === "paid"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-amber-100 text-amber-700"
-                          }`}
+                          className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold ${e.status === "completed" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}
                         >
                           {e.status}
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        <p className="font-semibold">{e.paymentMethod}</p>
-                        {e.transactionId && (
-                          <p className="text-[11px] text-gray-500">
-                            TRX: {e.transactionId}
-                          </p>
-                        )}
-                        {e.isManual && (
-                          <span className="text-[10px] text-purple-600 font-bold">
-                            MANUAL
-                          </span>
-                        )}
+                        <div className="text-sm">
+                          <p className="font-semibold">{e.paymentMethod}</p>
+                          {e.transactionId && (
+                            <p className="text-[11px] text-gray-500">
+                              TRX: {e.transactionId}
+                            </p>
+                          )}
+                          {e.isManual && (
+                            <span className="text-[10px] text-purple-600 font-bold">
+                              MANUAL
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-4 text-[12px] text-gray-600">
                         {e.createdAt}
                       </td>
                       <td className="px-4 py-4">
-                        <button
-                          onClick={() => setDetailsId(e.id)}
-                          className="h-9 px-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold flex items-center gap-1"
-                        >
-                          <Eye size={14} /> Details
-                        </button>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            onClick={() => setDetailsId(e.id)}
+                            className="h-9 px-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold flex items-center gap-1"
+                          >
+                            <Eye size={14} /> Details
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -732,107 +749,28 @@ export default function AdminEnrollmentsPage() {
               </tbody>
             </table>
           </div>
-        </div>
 
-        {/* ── MOBILE CARDS ── */}
-        <div className="md:hidden space-y-3">
-          {list.isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-5 w-5 animate-spin" />
-            </div>
-          ) : list.isError ? (
-            <div className="text-center py-12 text-red-600">
-              Failed to load enrollments
-            </div>
-          ) : enrollments.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
-              No enrollments found
-            </div>
-          ) : (
-            enrollments.map((e) => (
-              <div
-                key={String(e.id)}
-                className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3 shadow-sm"
+          <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
+            <p className="text-sm text-gray-500 font-medium">
+              Page {page} of {totalPages}
+            </p>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="h-9 px-4 rounded-xl border flex items-center gap-1 disabled:opacity-50"
               >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-bold text-gray-900">{e.student}</h3>
-                    <p className="text-[12px] text-gray-500">
-                      {e.studentEmail}
-                    </p>
-                    <p className="text-[11px] text-gray-400">ID: {e.id}</p>
-                  </div>
-                  <span
-                    className={`inline-flex px-3 py-1 rounded-full text-[10px] font-bold ${
-                      e.status === "completed" || e.status === "paid"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-amber-100 text-amber-700"
-                    }`}
-                  >
-                    {e.status}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <p className="text-gray-500 text-[11px]">Course</p>
-                    <p className="font-medium text-gray-800">{e.course}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-[11px]">Amount</p>
-                    <p className="font-extrabold text-gray-900">৳{e.amount}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-[11px]">Payment</p>
-                    <p className="font-medium">{e.paymentMethod}</p>
-                    {e.transactionId && (
-                      <p className="text-[11px] text-gray-500">
-                        TRX: {e.transactionId}
-                      </p>
-                    )}
-                    {e.isManual && (
-                      <span className="text-[10px] text-purple-600 font-bold">
-                        MANUAL
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-[11px]">Created</p>
-                    <p className="text-gray-600 text-[12px]">{e.createdAt}</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setDetailsId(e.id)}
-                  className="w-full h-9 rounded-xl border border-gray-200 text-xs font-bold flex items-center justify-center gap-1 hover:bg-gray-50"
-                >
-                  <Eye size={14} /> Details
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Pagination (shared) */}
-        <div className="flex items-center justify-between mt-5 px-1">
-          <p className="text-sm text-gray-500 font-medium">
-            Page {page} of {totalPages}
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="h-9 px-4 rounded-xl border flex items-center gap-1 disabled:opacity-50"
-            >
-              <ChevronLeft size={16} /> Prev
-            </button>
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-              className="h-9 px-4 rounded-xl border flex items-center gap-1 disabled:opacity-50"
-            >
-              Next <ChevronRight size={16} />
-            </button>
+                <ChevronLeft size={16} /> Prev
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+                className="h-9 px-4 rounded-xl border flex items-center gap-1 disabled:opacity-50"
+              >
+                Next <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </div>
