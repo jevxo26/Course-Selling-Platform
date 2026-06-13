@@ -24,7 +24,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.maruftech.online",
+    baseUrl: "https://course-selling-platform-api-production.up.railway.app",
 
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
