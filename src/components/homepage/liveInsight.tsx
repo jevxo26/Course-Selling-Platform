@@ -134,49 +134,49 @@ const allEarners: Omit<EarningItem, "id">[] = [
   {
     name: "John Doe",
     course: "UI Architecture Path",
-    amount: "+৳120.00",
+    amount: "৳120.00",
     avatar: "https://i.pravatar.cc/80?img=11",
   },
   {
     name: "Emma",
     course: "Agency Mastery",
-    amount: "+৳160.41",
+    amount: "৳160.41",
     avatar: "https://i.pravatar.cc/80?img=47",
   },
   {
     name: "Chloe",
     course: "UI Architecture",
-    amount: "+৳100.53",
+    amount: "৳100.53",
     avatar: "https://i.pravatar.cc/80?img=45",
   },
   {
     name: "Sarah K.",
     course: "Design Systems",
-    amount: "+৳88.20",
+    amount: "৳88.20",
     avatar: "https://i.pravatar.cc/80?img=23",
   },
   {
     name: "Liam",
     course: "Branding Bootcamp",
-    amount: "+৳74.00",
+    amount: "৳74.00",
     avatar: "https://i.pravatar.cc/80?img=3",
   },
   {
     name: "Nina",
     course: "Freelance Fast-Track",
-    amount: "+৳210.00",
+    amount: "৳210.00",
     avatar: "https://i.pravatar.cc/80?img=49",
   },
   {
     name: "Omar",
     course: "Product Design",
-    amount: "+৳95.50",
+    amount: "৳95.50",
     avatar: "https://i.pravatar.cc/80?img=18",
   },
   {
     name: "Zara",
     course: "Motion Design",
-    amount: "+৳135.00",
+    amount: "৳135.00",
     avatar: "https://i.pravatar.cc/80?img=25",
   },
 ];
@@ -458,7 +458,10 @@ const LiveInsight = () => {
   return (
     <section
       className={`py-10 pb-15 ${plusJakarta.className}`}
-      style={{ background: "linear-gradient(160deg,#eef0f5 0%,#e8eaf2 100%)" }}
+      style={{
+        background:
+          "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
+      }}
     >
       <div className="max-w-7xl mx-auto px-6">
         {/* ── Header ─────────────────────────────────────────────── */}

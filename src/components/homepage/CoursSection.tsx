@@ -174,7 +174,7 @@ const CourseSection = () => {
       className={`py-10 md:py-13 ${plusJakarta.className}`}
       style={{
         background:
-          "linear-gradient(160deg, #EEF2FF 0%, #F4F7FF 55%, #EDF4FF 100%)",
+          "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

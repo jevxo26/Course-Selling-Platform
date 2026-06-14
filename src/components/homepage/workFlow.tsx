@@ -214,7 +214,7 @@ const PrecisionWorkflow = () => {
       className="py-10 md:py-15 relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(170deg, #ffffff 0%, #F4F7FF 60%, #EEF2FF 100%)",
+          "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
         fontFamily: "var(--font-manrope)",
       }}
     >

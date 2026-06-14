@@ -85,8 +85,8 @@ export default function ShopPage() {
   }, [shopItems]);
 
   return (
-    <div className="min-h-screen bg-slate-50 mt-10 font-sans">
-      <section className="relative overflow-hidden border-b border-slate-200 bg-white">
+    <div className="min-h-screen mt-10 font-sans" style={{ background: "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)" }}>
+      <section className="relative overflow-hidden border-b border-slate-200/50">
         <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[420px] w-[760px] rounded-full bg-blue-100/70 blur-[90px]" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-14 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -327,7 +327,7 @@ export default function ShopPage() {
         )}
       </section>
 
-      <section className="border-t border-slate-200 bg-white">
+      <section className="border-t border-slate-200/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">

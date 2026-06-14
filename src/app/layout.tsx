@@ -93,6 +93,8 @@ export const metadata: Metadata = {
   },
 };
 
+import NextTopLoader from 'nextjs-toploader';
+
 export default function RootLayout({
   children,
 }: {
@@ -105,6 +107,17 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="h-full flex flex-col font-bai-jamjuree">
+        <NextTopLoader
+          color="#0052CC"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #0052CC,0 0 5px #0052CC"
+        />
         <AppProviders>
           <Header />
           <RouteMeta />

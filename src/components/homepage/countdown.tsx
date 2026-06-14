@@ -216,7 +216,7 @@ const CountDownTrust = () => {
       className="py-14 md:py-16 md:-mt-10 relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(160deg, #eef0ff 0%, #f0f1ff 60%, #edf0ff 100%)",
+          "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
         fontFamily: "var(--font-manrope)",
       }}
     >

@@ -195,8 +195,11 @@ export default function CourseList() {
 
   return (
     <div
-      className="min-h-screen bg-[#f0f4ff]"
-      style={{ fontFamily: "var(--font-bai-jamjuree, sans-serif)" }}
+      className="min-h-screen"
+      style={{ 
+        fontFamily: "var(--font-bai-jamjuree, sans-serif)",
+        background: "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)" 
+      }}
     >
       {/* HERO BANNER */}
       <div

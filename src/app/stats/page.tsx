@@ -24,7 +24,7 @@ export default function StatsPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans">
+      <div className="min-h-screen flex items-center justify-center font-sans" style={{ background: "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)" }}>
         <p className="text-slate-500 font-bold">
           {isError ? "Failed to load stats." : "Loading stats..."}
         </p>
@@ -36,7 +36,7 @@ export default function StatsPage() {
   const maxSales = Math.max(...salesTrend.map((d) => d.value));
 
   return (
-    <div className="min-h-screen bg-white mt-10">
+    <div className="min-h-screen mt-10" style={{ background: "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)" }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

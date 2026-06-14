@@ -58,7 +58,7 @@ const ArchitectureProgress = () => {
       className={`py-20 md:py-22 relative overflow-hidden ${plusJakarta.className}`}
       style={{
         background:
-          "linear-gradient(160deg, #EEF2FF 0%, #F4F7FF 55%, #EDF4FF 100%)",
+          "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
       }}
     >
       {/* subtle bg grid */}
