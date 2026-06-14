@@ -161,7 +161,7 @@ export default function ForgetPasswordPage(): React.JSX.Element {
                 </Link>
               </div>
 
-              <p className="text-center text-[11px] text-slate-300 mt-4">
+              <p className="text-center text-[11px] text-slate-500 mt-4">
                 © 2026 Developed by Aftab Farhan ARKO . All rights reserved.
               </p>
             </div>

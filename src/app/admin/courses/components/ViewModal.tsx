@@ -65,11 +65,10 @@ export default function ViewModal({ id, open, onClose }: Props) {
                   </p>
                 </div>
                 <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
-                    course.isPublished
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${course.isPublished
                       ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                       : "bg-amber-50 text-amber-700 border border-amber-200"
-                  }`}
+                    }`}
                 >
                   {course.isPublished ? (
                     <><Globe size={12} /> Published</>
@@ -92,11 +91,11 @@ export default function ViewModal({ id, open, onClose }: Props) {
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-[20px] font-black text-gray-900">
-                  ${Number(course.discountPrice ?? course.price ?? 0).toFixed(2)}
+                  ৳{Number(course.discountPrice ?? course.price ?? 0).toFixed(2)}
                 </span>
                 {course.discountPrice && course.price && Number(course.discountPrice) < Number(course.price) && (
                   <span className="text-[13px] font-semibold text-gray-400 line-through">
-                    ${Number(course.price).toFixed(2)}
+                    ৳{Number(course.price).toFixed(2)}
                   </span>
                 )}
               </div>
@@ -161,7 +160,7 @@ export default function ViewModal({ id, open, onClose }: Props) {
               )}
             </div>
           </div>
-          
+
           {course.courseUrl && (
             <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex items-center justify-between">
               <div>

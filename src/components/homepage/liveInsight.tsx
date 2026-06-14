@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus_Jakarta_Sans } from "next/font/google";
-import { DollarSign, Landmark } from "lucide-react";
+import { Landmark } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useLandingWithdrawLiveQuery } from "@/lib/api/landing/withdraw-live";
@@ -51,18 +51,13 @@ function extractWithdrawLiveList(payload: unknown): unknown[] {
 }
 
 function normalizeWithdrawAmount(amount: unknown): string {
+  let val = 0;
   if (typeof amount === "number" && Number.isFinite(amount)) {
-    return `$${amount.toFixed(2)}`;
+    val = amount;
+  } else if (typeof amount === "string") {
+    val = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
   }
-
-  if (typeof amount === "string") {
-    const trimmed = amount.trim();
-    if (trimmed.length === 0) return "$0.00";
-    if (trimmed.startsWith("$")) return trimmed;
-    return `$${trimmed}`;
-  }
-
-  return "$0.00";
+  return `৳${val.toFixed(2)}`;
 }
 
 function normalizeWithdrawLiveItem(
@@ -128,8 +123,7 @@ function normalizeEarningLiveItem(
     (typeof o.userPhoto === "string" && o.userPhoto.trim()) ||
     `https://i.pravatar.cc/80?img=${(idx % 60) + 1}`;
 
-  let amount = normalizeWithdrawAmount(o.amount);
-  if (!amount.startsWith("+")) amount = `+${amount}`;
+  const amount = normalizeWithdrawAmount(o.amount);
 
   return { name, course, amount, avatar };
 }
@@ -140,49 +134,49 @@ const allEarners: Omit<EarningItem, "id">[] = [
   {
     name: "John Doe",
     course: "UI Architecture Path",
-    amount: "+$120.00",
+    amount: "+৳120.00",
     avatar: "https://i.pravatar.cc/80?img=11",
   },
   {
     name: "Emma",
     course: "Agency Mastery",
-    amount: "+$160.41",
+    amount: "+৳160.41",
     avatar: "https://i.pravatar.cc/80?img=47",
   },
   {
     name: "Chloe",
     course: "UI Architecture",
-    amount: "+$100.53",
+    amount: "+৳100.53",
     avatar: "https://i.pravatar.cc/80?img=45",
   },
   {
     name: "Sarah K.",
     course: "Design Systems",
-    amount: "+$88.20",
+    amount: "+৳88.20",
     avatar: "https://i.pravatar.cc/80?img=23",
   },
   {
     name: "Liam",
     course: "Branding Bootcamp",
-    amount: "+$74.00",
+    amount: "+৳74.00",
     avatar: "https://i.pravatar.cc/80?img=3",
   },
   {
     name: "Nina",
     course: "Freelance Fast-Track",
-    amount: "+$210.00",
+    amount: "+৳210.00",
     avatar: "https://i.pravatar.cc/80?img=49",
   },
   {
     name: "Omar",
     course: "Product Design",
-    amount: "+$95.50",
+    amount: "+৳95.50",
     avatar: "https://i.pravatar.cc/80?img=18",
   },
   {
     name: "Zara",
     course: "Motion Design",
-    amount: "+$135.00",
+    amount: "+৳135.00",
     avatar: "https://i.pravatar.cc/80?img=25",
   },
 ];
@@ -191,49 +185,49 @@ const allWithdrawers: Omit<WithdrawalItem, "id">[] = [
   {
     name: "Michael",
     status: "Withdrawal Initiated",
-    amount: "$957.34",
+    amount: "৳957.34",
     avatar: "https://i.pravatar.cc/80?img=12",
   },
   {
     name: "Alex Chen",
     status: "Withdrawal Initiated",
-    amount: "$300.00",
+    amount: "৳300.00",
     avatar: "https://i.pravatar.cc/80?img=15",
   },
   {
     name: "Alex",
     status: "Withdrawal Initiated",
-    amount: "$540.62",
+    amount: "৳540.62",
     avatar: "https://i.pravatar.cc/80?img=60",
   },
   {
     name: "Michael",
     status: "Withdrawal Initiated",
-    amount: "$169.52",
+    amount: "৳169.52",
     avatar: "https://i.pravatar.cc/80?img=33",
   },
   {
     name: "Grace",
     status: "Withdrawal Initiated",
-    amount: "$415.00",
+    amount: "৳415.00",
     avatar: "https://i.pravatar.cc/80?img=29",
   },
   {
     name: "Carlos",
     status: "Withdrawal Initiated",
-    amount: "$880.00",
+    amount: "৳880.00",
     avatar: "https://i.pravatar.cc/80?img=7",
   },
   {
     name: "Priya",
     status: "Withdrawal Initiated",
-    amount: "$225.30",
+    amount: "৳225.30",
     avatar: "https://i.pravatar.cc/80?img=44",
   },
   {
     name: "Yuki",
     status: "Withdrawal Initiated",
-    amount: "$310.00",
+    amount: "৳310.00",
     avatar: "https://i.pravatar.cc/80?img=38",
   },
 ];
@@ -504,7 +498,7 @@ const LiveInsight = () => {
               transition={{ duration: 0.35 }}
               className="text-[28px] font-extrabold text-blue-600 tracking-tight"
             >
-              ${total.toLocaleString("en-US")}
+              ৳{total.toLocaleString("en-US")}
             </motion.p>
           </div>
         </motion.div>
@@ -520,7 +514,7 @@ const LiveInsight = () => {
           >
             <div className="flex items-center gap-2.5 mb-4 pb-3.5 border-b border-slate-100">
               <div className="w-[30px] h-[30px] rounded-[9px] bg-green-100 flex items-center justify-center">
-                <DollarSign className="w-[15px] h-[15px] text-green-600" />
+                <span className="text-[15px] font-black text-green-600">৳</span>
               </div>
               <h3 className="text-[13px] font-bold text-slate-900">
                 Recent Earnings

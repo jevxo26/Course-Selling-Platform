@@ -167,7 +167,7 @@ export default function AffiliateWithdrawPage() {
 
                       <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2">
                         <span className="text-sm font-black text-slate-900">
-                          ${Number(sale.amount || 0).toFixed(2)}
+                          ৳{Number(sale.amount || 0).toFixed(2)}
                         </span>
                         <button
                           onClick={() => handleRequestWithdraw(sale.id)}
@@ -275,7 +275,7 @@ export default function AffiliateWithdrawPage() {
 
                       <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2">
                         <span className="text-sm font-black text-slate-900">
-                          ${Number(w.totalAmount ?? w.amount ?? 0).toFixed(2)}
+                          ৳{Number(w.totalAmount ?? w.amount ?? 0).toFixed(2)}
                         </span>
                         <div className="flex items-center gap-1.5">
                           <span

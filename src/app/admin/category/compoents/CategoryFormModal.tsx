@@ -33,12 +33,8 @@ export function CategoryFormModal({
   const [description, setDescription] = useState(initial?.description ?? "");
   const [photo, setPhoto] = useState(initial?.photo ?? "");
   const [seoTitle, setSeoTitle] = useState(initial?.metadata?.seo_title ?? "");
-  const [iconClass, setIconClass] = useState(
-    initial?.metadata?.icon_class ?? "",
-  );
-  const [isFeatured, setIsFeatured] = useState(
-    initial?.metadata?.is_featured ?? false,
-  );
+  const [iconClass, setIconClass] = useState(initial?.metadata?.icon_class ?? "");
+  const [isFeatured, setIsFeatured] = useState(initial?.metadata?.is_featured ?? false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleNameChange = (v: string) => {
@@ -56,7 +52,8 @@ export function CategoryFormModal({
   const submit = () => {
     const e = validate();
     setErrors(e);
-    if (Object.keys(e).length) return;
+    if (Object.keys(e).length > 0) return;
+
     onSubmit({
       name: name.trim(),
       slug: slug.trim(),
@@ -70,10 +67,15 @@ export function CategoryFormModal({
     });
   };
 
-  const inputCls = (err?: string) =>
-    `w-full h-10 px-3 text-[12px] font-medium border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 transition ${
-      err ? "border-red-400 bg-red-50/60" : "border-gray-200 bg-gray-50/40"
-    }`;
+  // Fixed input class
+  const getInputClass = (error?: string) => {
+    const base = "w-full h-10 px-4 text-[13px] font-medium text-gray-900 bg-white border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all";
+    return error
+      ? `${base} border-red-400 bg-red-50`
+      : `${base} border-gray-300 hover:border-gray-400`;
+  };
+
+  const textareaCls = `w-full px-4 py-3 text-[13px] font-medium text-gray-900 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all`;
 
   const Field = ({
     label,
@@ -87,13 +89,9 @@ export function CategoryFormModal({
     children: React.ReactNode;
   }) => (
     <div>
-      <label className="flex items-center gap-1.5 text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">
+      <label className="flex items-center gap-1.5 text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1.5">
         {label}
-        {optional && (
-          <span className="text-gray-300 normal-case font-normal">
-            · optional
-          </span>
-        )}
+        {optional && <span className="text-gray-400 normal-case font-normal">· optional</span>}
       </label>
       {children}
       {error && <p className="text-[10px] text-red-500 mt-1">{error}</p>}
@@ -108,27 +106,32 @@ export function CategoryFormModal({
       onClose={onClose}
       wide
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         <ImageUploadField value={photo} onChange={setPhoto} />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Name" error={errors.name}>
             <input
+              type="text"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="e.g. Web Development"
-              className={inputCls(errors.name)}
+              className={getInputClass(errors.name)}
+              disabled={loading}
             />
           </Field>
+
           <Field label="Slug" error={errors.slug}>
             <input
+              type="text"
               value={slug}
               onChange={(e) => {
                 setSlugManual(true);
                 setSlug(e.target.value);
               }}
               placeholder="e.g. web-development"
-              className={inputCls(errors.slug)}
+              className={getInputClass(errors.slug)}
+              disabled={loading}
             />
           </Field>
         </div>
@@ -139,74 +142,76 @@ export function CategoryFormModal({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Short description of this category…"
             rows={3}
-            className="w-full px-3 py-2.5 text-[12px] font-medium border border-gray-200 bg-gray-50/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none transition"
+            className={textareaCls}
+            disabled={loading}
           />
         </Field>
 
-        <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-4 space-y-3">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+        <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-5 space-y-4">
+          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
             Metadata
           </p>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="SEO Title" optional>
               <input
+                type="text"
                 value={seoTitle}
                 onChange={(e) => setSeoTitle(e.target.value)}
                 placeholder="Best … Courses 2024"
-                className={inputCls()}
+                className={getInputClass()}
+                disabled={loading}
               />
             </Field>
             <Field label="Icon Class" optional>
               <input
+                type="text"
                 value={iconClass}
                 onChange={(e) => setIconClass(e.target.value)}
                 placeholder="fa-code"
-                className={inputCls()}
+                className={getInputClass()}
+                disabled={loading}
               />
             </Field>
           </div>
+
           <label className="flex items-center gap-3 cursor-pointer select-none group">
             <button
               type="button"
               onClick={() => setIsFeatured((p) => !p)}
-              className={`relative w-10 rounded-full transition-colors shrink-0 ${
-                isFeatured ? "bg-indigo-600" : "bg-gray-200"
-              }`}
+              className={`relative w-10 rounded-full transition-colors shrink-0 ${isFeatured ? "bg-indigo-600" : "bg-gray-300"}`}
               style={{ height: "22px" }}
+              disabled={loading}
               aria-pressed={isFeatured}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
-                  isFeatured ? "translate-x-[18px]" : "translate-x-0"
-                }`}
+                className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${isFeatured ? "translate-x-[18px]" : "translate-x-0"}`}
               />
             </button>
-            <span className="text-[12px] font-semibold text-gray-600 group-hover:text-gray-900 transition-colors">
+            <span className="text-[13px] font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
               Featured category
             </span>
-            {isFeatured && (
-              <Star size={12} className="text-amber-400 fill-amber-400" />
-            )}
+            {isFeatured && <Star size={14} className="text-amber-400 fill-amber-400" />}
           </label>
         </div>
 
-        <div className="flex gap-3 pt-1">
+        <div className="flex gap-3 pt-2">
           <button
             onClick={onClose}
             disabled={loading}
-            className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-[12px] font-bold text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="flex-1 py-3.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-all disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={submit}
             disabled={loading}
-            className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-[12px] font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all disabled:opacity-50"
-          > 
+            className="flex-1 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.985] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 transition-all disabled:opacity-50"
+          >
             {loading ? (
-              <Loader2 size={14} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin" />
             ) : (
-              <Check size={13} />
+              <Check size={16} />
             )}
             {initial ? "Save Changes" : "Create Category"}
           </button>

@@ -23,10 +23,10 @@ export default function PricingCard({ course }: Props) {
         </div>
         <div className="flex items-end justify-center gap-1 mb-2">
           <span className="text-3xl font-bold text-slate-400 line-through">
-            ${Math.floor(course.price * 1.5)}
+            ৳{Math.floor(course.price * 1.5)}
           </span>
           <span className="text-5xl font-black text-slate-900 tracking-tight">
-            ${course.price}
+            ৳{course.price}
           </span>
         </div>
         <p className="text-sm font-semibold text-emerald-600 mb-6">

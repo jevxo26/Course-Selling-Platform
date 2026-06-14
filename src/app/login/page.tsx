@@ -65,7 +65,7 @@ export default function LoginPage(): React.JSX.Element {
         <div className="flex flex-col lg:flex-row">
           {/* ── LEFT: Lottie — hidden on mobile, visible md+ ── */}
           <div className="hidden md:flex lg:w-1/2 p-10 flex-col items-center justify-center bg-white">
-            <div className="w-full mb-6">
+            <div className="w-full mb-6 mt-16 lg:mt-28 pl-4 lg:pl-12">
               <h2 className="text-3xl font-extrabold text-slate-900 leading-tight">
                 Welcome <span className="text-[#2563EB]">Back</span>
               </h2>
@@ -211,7 +211,7 @@ export default function LoginPage(): React.JSX.Element {
                 </Link>
               </p>
 
-              <p className="text-center text-[11px] text-slate-300 mt-3">
+              <p className="text-center text-[11px] text-slate-500 mt-3">
                 © 2026 Developed by Aftab Farhan ARKO . All rights reserved.
               </p>
             </div>

@@ -112,7 +112,7 @@ function toUi(raw: any): UiProduct | null {
   const price =
     priceRaw === null || priceRaw === undefined || priceRaw === ""
       ? "—"
-      : `$${Number(priceRaw).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+      : `৳${Number(priceRaw).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
   const status =
     String(raw?.status ?? raw?.state ?? raw?.approvalStatus ?? "—").trim() ||
     "—";
@@ -387,11 +387,10 @@ export default function ProductsManager(): React.JSX.Element {
                   setTab(t);
                   setPage(1);
                 }}
-                className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-all ${
-                  tab === t
+                className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-all ${tab === t
                     ? "bg-white text-slate-900 shadow-sm"
                     : "text-slate-500 hover:text-slate-700"
-                }`}
+                  }`}
               >
                 {t === "all" ? "All Products" : "My Products"}
               </button>

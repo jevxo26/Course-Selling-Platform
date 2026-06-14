@@ -102,7 +102,7 @@ export default function SignupPage(): React.JSX.Element {
         const withOther = names.includes("Other") ? names : [...names, "Other"];
         setCountries(withOther);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       active = false;
@@ -448,7 +448,7 @@ export default function SignupPage(): React.JSX.Element {
                 </Link>
               </p>
 
-              <p className="text-center text-[11px] text-slate-300 mt-3">
+              <p className="text-center text-[11px] text-slate-500 mt-3">
                 © 2026 Developed by Aftab Farhan ARKO . All rights reserved.
               </p>
             </div>

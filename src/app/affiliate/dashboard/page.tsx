@@ -107,7 +107,7 @@ export default function AffiliateDashboard() {
                   Total Income
                 </p>
                 <p className="text-3xl font-black text-slate-900">
-                  $
+                  ৳
                   {totals.totalIncome.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -253,13 +253,13 @@ export default function AffiliateDashboard() {
                           </div>
                         </td>
                         <td className="py-4 px-4 text-sm font-bold text-slate-700">
-                          ${Number(item.price).toFixed(2)}
+                          ৳{Number(item.price).toFixed(2)}
                         </td>
                         <td className="py-4 px-4 text-sm font-black text-slate-900">
                           {item.totalEnrollments}
                         </td>
                         <td className="py-4 px-4 text-sm font-bold text-emerald-600">
-                          ${Number(item.totalIncome).toFixed(2)}
+                          ৳{Number(item.totalIncome).toFixed(2)}
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
@@ -310,7 +310,7 @@ export default function AffiliateDashboard() {
                           {item.courseTitle}
                         </h3>
                         <p className="text-sm font-bold text-slate-700 mt-0.5">
-                          ${Number(item.price).toFixed(2)}
+                          ৳{Number(item.price).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -325,7 +325,7 @@ export default function AffiliateDashboard() {
                       <div className="bg-emerald-50 rounded-xl p-2.5">
                         <p className="text-slate-400 font-medium">Earnings</p>
                         <p className="font-black text-emerald-600">
-                          ${Number(item.totalIncome).toFixed(2)}
+                          ৳{Number(item.totalIncome).toFixed(2)}
                         </p>
                       </div>
                     </div>

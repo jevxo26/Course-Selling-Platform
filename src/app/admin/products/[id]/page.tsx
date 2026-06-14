@@ -91,7 +91,6 @@ function DeleteConfirmModal({
         className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      {/* Bottom sheet on mobile, centered modal on sm+ */}
       <div className="relative w-full sm:max-w-sm bg-white sm:rounded-2xl rounded-t-2xl shadow-xl p-6 text-center border border-slate-100 safe-bottom">
         <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-5 sm:hidden" />
         <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-4">
@@ -129,25 +128,34 @@ function DeleteConfirmModal({
 /* ── Payload display ── */
 type JVal = string | number | boolean | null | JVal[] | { [k: string]: JVal };
 
-function renderValue(val: JVal): React.ReactNode {
+/** Is this value "simple" enough to render inline in a grid cell? */
+function isSimple(val: JVal): boolean {
+  if (val === null || val === undefined) return true;
+  if (typeof val !== "object") return true;
+  if (Array.isArray(val)) return val.every((v) => typeof v !== "object");
+  return false;
+}
+
+function renderSimpleValue(val: JVal): React.ReactNode {
   if (val === null || val === undefined)
     return <span className="text-slate-300 text-[11px]">—</span>;
   if (typeof val === "boolean")
     return (
       <span
-        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${val ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}
+        className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${val ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"
+          }`}
       >
         {val ? "true" : "false"}
       </span>
     );
   if (typeof val === "number")
-    return <span className="font-mono text-[12px] text-slate-800">{val}</span>;
+    return <span className="font-mono text-[11px] text-slate-800">{val}</span>;
   if (typeof val === "string") {
     if (!val) return <span className="text-slate-300 text-[11px]">—</span>;
     if (/^\d{4}-\d{2}-\d{2}T/.test(val))
       return (
-        <span className="text-[12px] text-slate-600 flex items-center gap-1">
-          <Clock size={10} className="text-slate-400" />
+        <span className="text-[11px] text-slate-600 flex items-center gap-1">
+          <Clock size={9} className="text-slate-400 shrink-0" />
           {formatDate(val)}
         </span>
       );
@@ -157,56 +165,36 @@ function renderValue(val: JVal): React.ReactNode {
           href={val}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[11px] text-blue-600 underline break-all line-clamp-2 max-w-full"
+          className="text-[10px] text-blue-600 underline break-all line-clamp-2"
         >
           {val}
         </a>
       );
     return (
-      <span className="text-[12px] text-slate-800 break-words">{val}</span>
+      <span className="text-[11px] text-slate-800 break-words leading-snug">
+        {val}
+      </span>
     );
   }
+  // Simple array (primitives only)
   if (Array.isArray(val)) {
     if (!val.length)
       return <span className="text-slate-300 text-[11px]">—</span>;
-    if (val.every((v) => typeof v !== "object"))
-      return (
-        <div className="flex flex-wrap gap-1 mt-0.5">
-          {val.map((v, i) => (
-            <span
-              key={i}
-              className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-medium border border-indigo-100"
-            >
-              {String(v)}
-            </span>
-          ))}
-        </div>
-      );
     return (
-      <div className="mt-1 space-y-1 w-full">
-        {(val as any[]).map((item, i) => (
-          <div
+      <div className="flex flex-wrap gap-1">
+        {val.map((v, i) => (
+          <span
             key={i}
-            className="border border-slate-100 rounded-lg p-2 bg-slate-50/50"
+            className="px-1.5 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[9px] font-medium border border-indigo-100"
           >
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              #{i + 1}
-            </p>
-            <PayloadTable data={item} />
-          </div>
+            {String(v)}
+          </span>
         ))}
       </div>
     );
   }
-  if (typeof val === "object") {
-    return (
-      <div className="mt-1 border border-slate-100 rounded-lg p-2 bg-slate-50/40 w-full">
-        <PayloadTable data={val as Record<string, JVal>} />
-      </div>
-    );
-  }
   return (
-    <span className="text-[12px] text-slate-800 break-words">
+    <span className="text-[11px] text-slate-800 break-words">
       {String(val)}
     </span>
   );
@@ -245,36 +233,97 @@ function fieldLabel(key: string) {
     .trim();
 }
 
-function PayloadTable({ data }: { data: Record<string, JVal> }) {
+/**
+ * PayloadGrid — renders flat key/value pairs in a responsive 2-col (md: 3-col) grid.
+ * Complex values (nested objects / arrays of objects) fall through to full-width rows below.
+ */
+function PayloadGrid({ data }: { data: Record<string, JVal> }) {
   const entries = Object.entries(data);
+
+  const simpleEntries = entries.filter(([, v]) => isSimple(v));
+  const complexEntries = entries.filter(([, v]) => !isSimple(v));
+
   return (
-    <div className="w-full space-y-0">
-      {entries.map(([key, val]) => {
+    <div className="w-full space-y-3">
+      {/* ── 2/3-col grid for simple scalar / primitive-array values ── */}
+      {simpleEntries.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-0 divide-y divide-slate-100">
+          {simpleEntries.map(([key, val]) => {
+            const Icon = ICONS[key] ?? Package;
+            return (
+              <div key={key} className="py-2 flex flex-col gap-0.5 min-w-0">
+                <div className="flex items-center gap-1 mb-0.5">
+                  <Icon size={9} className="text-slate-400 shrink-0" />
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider truncate">
+                    {fieldLabel(key)}
+                  </span>
+                </div>
+                <div className="pl-0.5 min-w-0 overflow-hidden">
+                  {renderSimpleValue(val)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── Full-width rows for nested objects / arrays of objects ── */}
+      {complexEntries.map(([key, val]) => {
         const Icon = ICONS[key] ?? Package;
-        const isComplex = val !== null && typeof val === "object";
         return (
-          <div
-            key={key}
-            className={`border-b border-slate-100 last:border-0 py-2 ${
-              isComplex ? "flex flex-col gap-1" : "flex items-start gap-2"
-            }`}
-          >
-            {/* Label */}
-            <div className="flex items-center gap-1.5 shrink-0 min-w-[120px] w-[120px]">
+          <div key={key} className="w-full">
+            <div className="flex items-center gap-1.5 mb-1.5">
               <Icon size={10} className="text-slate-400 shrink-0" />
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide whitespace-nowrap">
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                 {fieldLabel(key)}
               </span>
             </div>
-            {/* Value */}
-            <div className="flex-1 min-w-0 overflow-hidden">
-              {renderValue(val)}
-            </div>
+            <ComplexValue val={val} />
           </div>
         );
       })}
     </div>
   );
+}
+
+function ComplexValue({ val }: { val: JVal }) {
+  if (val === null || val === undefined)
+    return <span className="text-slate-300 text-[11px]">—</span>;
+
+  if (Array.isArray(val)) {
+    if (!val.length)
+      return <span className="text-slate-300 text-[11px]">—</span>;
+    // Array of primitives already handled in isSimple; here it's array of objects
+    return (
+      <div className="space-y-1.5">
+        {(val as any[]).map((item, i) => (
+          <div
+            key={i}
+            className="border border-slate-100 rounded-xl p-3 bg-slate-50/60"
+          >
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              #{i + 1}
+            </p>
+            {typeof item === "object" && item !== null ? (
+              <PayloadGrid data={item as Record<string, JVal>} />
+            ) : (
+              <span className="text-[11px] text-slate-800">{String(item)}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (typeof val === "object") {
+    return (
+      <div className="border border-slate-100 rounded-xl p-3 bg-slate-50/40">
+        <PayloadGrid data={val as Record<string, JVal>} />
+      </div>
+    );
+  }
+
+  return renderSimpleValue(val);
 }
 
 function ApiPayloadCard({ product }: { product: Record<string, JVal> }) {
@@ -288,10 +337,10 @@ function ApiPayloadCard({ product }: { product: Record<string, JVal> }) {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[13px] font-bold text-slate-800">
-            Raw API Payload
+            Payload
           </p>
           <p className="text-[10px] text-slate-400 truncate">
-            Product #{String(product.id)} · {Object.keys(product).length} fields
+            Product #{String(product.id)} · {Object.keys(product).length}
           </p>
         </div>
         <button
@@ -303,8 +352,8 @@ function ApiPayloadCard({ product }: { product: Record<string, JVal> }) {
       </div>
 
       {open && (
-        <div className="p-4 overflow-x-auto">
-          <PayloadTable data={product} />
+        <div className="p-4">
+          <PayloadGrid data={product} />
         </div>
       )}
     </div>
@@ -402,7 +451,7 @@ export default function ProductDetailsPage({
   const status = String(product.status ?? product.state ?? "—").trim();
   const price = product.totalAmount ?? product.price ?? null;
   const priceFormatted = price
-    ? `$${Number(price).toLocaleString("en-US", { minimumFractionDigits: 2 })}`
+    ? `৳${Number(price).toLocaleString("en-US", { minimumFractionDigits: 2 })}`
     : "—";
   const createdAt = formatDate(product.createdAt ?? product.created_at);
   const updatedAt = formatDate(product.updatedAt ?? product.updated_at);
@@ -466,7 +515,6 @@ export default function ProductDetailsPage({
             <span className="hidden xs:inline">Back</span>
           </button>
 
-          {/* Title truncated in center on mobile */}
           <p className="text-[13px] font-bold text-slate-700 truncate flex-1 text-center px-2 hidden sm:block">
             {title}
           </p>
@@ -501,7 +549,6 @@ export default function ProductDetailsPage({
         <div className="p-4 space-y-4 max-w-5xl mx-auto">
           {/* ── Hero Card ── */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
-            {/* Title row */}
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-violet-600 flex items-center justify-center flex-shrink-0">
@@ -519,7 +566,6 @@ export default function ProductDetailsPage({
               <StatusPill status={status} />
             </div>
 
-            {/* Stats grid — 2 cols on mobile, 4 on sm+ */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4">
               {[
                 {
@@ -553,7 +599,6 @@ export default function ProductDetailsPage({
               ))}
             </div>
 
-            {/* Country codes */}
             {countryCodes.length > 0 && (
               <div className="mb-3">
                 <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-1.5">
@@ -573,7 +618,6 @@ export default function ProductDetailsPage({
               </div>
             )}
 
-            {/* Approval banner */}
             {approvedByName && (
               <div className="flex items-start gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3.5 py-2.5 mt-2">
                 <Shield
@@ -596,7 +640,6 @@ export default function ProductDetailsPage({
               </div>
             )}
 
-            {/* Rejection banner */}
             {rejectReason && (
               <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5 mt-2">
                 <AlertTriangle
@@ -626,7 +669,6 @@ export default function ProductDetailsPage({
                 </h2>
               </div>
 
-              {/* Avatar row */}
               <div className="flex items-center gap-3 mb-4">
                 {userPhoto ? (
                   <img
@@ -665,7 +707,6 @@ export default function ProductDetailsPage({
                 </div>
               </div>
 
-              {/* Field rows — single unified layout that works on all sizes */}
               <div className="space-y-0">
                 {ownerFields.map(({ icon, label, value }) => (
                   <InfoRow
@@ -722,13 +763,12 @@ export default function ProductDetailsPage({
                             )}
                           </div>
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${
-                              s === "approved"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : s === "pending"
-                                  ? "bg-amber-50 text-amber-700 border border-amber-200"
-                                  : "bg-red-50 text-red-700 border border-red-200"
-                            }`}
+                            className={`px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${s === "approved"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : s === "pending"
+                                ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                : "bg-red-50 text-red-700 border border-red-200"
+                              }`}
                           >
                             {pm?.status ?? "—"}
                           </span>
@@ -780,7 +820,6 @@ export default function ProductDetailsPage({
           {/* API Payload */}
           <ApiPayloadCard product={product as Record<string, JVal>} />
 
-          {/* Bottom spacing for safe area on iOS */}
           <div className="h-4 sm:h-0" />
         </div>
       </div>

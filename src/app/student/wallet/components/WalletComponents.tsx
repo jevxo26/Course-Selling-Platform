@@ -52,7 +52,7 @@ function extractString(payload: any, keys: string[]): string {
 
 function formatMoney(amount: number | null, currency: string): string {
   const val = amount === null ? 0 : amount;
-  const c = currency || "$";
+  const c = currency || "৳";
   return `${c}${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
@@ -264,7 +264,7 @@ export const WalletDashboard = () => {
         "balance.currency",
         "available.currency",
         "data.currency",
-      ]) || "$",
+      ]) || "৳",
     [root],
   );
 

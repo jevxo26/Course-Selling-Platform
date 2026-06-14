@@ -141,7 +141,7 @@ export default function AffiliateWalletPage() {
                   </p>
                 </div>
                 <p className="text-3xl sm:text-4xl font-black tracking-tight mt-3 leading-none">
-                  $
+                  ৳
                   {balance.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -167,7 +167,7 @@ export default function AffiliateWalletPage() {
                   </p>
                 </div>
                 <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-3 leading-none">
-                  $
+                  ৳
                   {withdrawStats.pending.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -192,7 +192,7 @@ export default function AffiliateWalletPage() {
                   </p>
                 </div>
                 <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-3 leading-none">
-                  $
+                  ৳
                   {withdrawStats.completed.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -285,7 +285,7 @@ export default function AffiliateWalletPage() {
 
                     <div className="flex items-center gap-3 sm:text-right self-end sm:self-auto">
                       <span className="text-sm font-black text-slate-900">
-                        ${amount.toFixed(2)}
+                        ৳{amount.toFixed(2)}
                       </span>
                       <span
                         className={`inline-block text-[10px] font-bold rounded-full px-2.5 py-1 ${statusConfig.color}`}

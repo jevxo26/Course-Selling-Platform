@@ -188,7 +188,7 @@ export default function ShopPage() {
                           Price
                         </p>
                         <p className="mt-1 text-[15px] font-black text-white">
-                          ${c.price.toFixed(0)}
+                          ৳{c.price.toFixed(0)}
                         </p>
                       </div>
                     </div>
@@ -271,7 +271,7 @@ export default function ShopPage() {
                       Price
                     </p>
                     <p className="mt-0.5 text-[15px] font-black text-blue-600">
-                      ${c.price.toFixed(0)}
+                      ৳{c.price.toFixed(0)}
                     </p>
                   </div>
                 </div>

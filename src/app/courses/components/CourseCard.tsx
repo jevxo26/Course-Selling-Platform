@@ -81,7 +81,7 @@ export default function CourseCard({ course, index, categoryMeta }: Props) {
           </h3>
           <div className="shrink-0 flex flex-col items-end">
             <span className="text-[20px] font-black text-slate-900 leading-none">
-              ${course.price}
+              ৳{course.price}
             </span>
             <span className="text-[10px] text-slate-400 font-semibold mt-0.5">
               one-time

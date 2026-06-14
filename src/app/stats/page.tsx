@@ -13,7 +13,7 @@ import {
 import { useGetStatsQuery } from "@/lib/api/statsApi";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  DollarSign,
+  DollarSign: ({ className }) => <span className={`flex items-center justify-center font-extrabold text-[1.1em] leading-none ${className}`}>৳</span>,
   ShoppingCart,
   Users,
   GraduationCap,
@@ -89,7 +89,7 @@ export default function StatsPage() {
                       {kpi.label}
                     </p>
                     <p className="mt-2 text-2xl font-black text-slate-900">
-                      {kpi.value}
+                      {typeof kpi.value === 'string' ? kpi.value.replace('$', '৳') : kpi.value}
                     </p>
                   </div>
                   <div className="h-11 w-11 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100">
@@ -171,7 +171,7 @@ export default function StatsPage() {
                 <p className="text-[11px] font-black tracking-widest text-slate-500 uppercase">
                   Avg. Order
                 </p>
-                <p className="mt-1 text-lg font-black text-slate-900">$38.20</p>
+                <p className="mt-1 text-lg font-black text-slate-900">৳38.20</p>
               </div>
               <div className="rounded-2xl bg-slate-50 border border-slate-200 px-4 py-3">
                 <p className="text-[11px] font-black tracking-widest text-slate-500 uppercase">
@@ -257,7 +257,7 @@ export default function StatsPage() {
                     <p className="text-[11px] font-black text-slate-500 uppercase">
                       Price
                     </p>
-                    <p className="font-bold text-slate-800">{c.price}</p>
+                    <p className="font-bold text-slate-800">{typeof c.price === 'string' ? c.price.replace('$', '৳') : c.price}</p>
                   </div>
                   <div>
                     <p className="text-[11px] font-black text-slate-500 uppercase">
@@ -271,7 +271,7 @@ export default function StatsPage() {
                     <p className="text-[11px] font-black text-slate-500 uppercase">
                       Revenue
                     </p>
-                    <p className="font-black text-slate-900">{c.revenue}</p>
+                    <p className="font-black text-slate-900">{typeof c.revenue === 'string' ? c.revenue.replace('$', '৳') : c.revenue}</p>
                   </div>
                   <div>
                     <p className="text-[11px] font-black text-slate-500 uppercase">
@@ -301,7 +301,7 @@ export default function StatsPage() {
                 <p className="text-[11px] font-black tracking-widest text-white/70 uppercase">
                   Bundle Price
                 </p>
-                <p className="mt-1 text-lg font-black">$99</p>
+                <p className="mt-1 text-lg font-black">৳99</p>
               </div>
               <div className="rounded-2xl bg-white/10 border border-white/10 px-4 py-3">
                 <p className="text-[11px] font-black tracking-widest text-white/70 uppercase">
@@ -313,7 +313,7 @@ export default function StatsPage() {
                 <p className="text-[11px] font-black tracking-widest text-white/70 uppercase">
                   Est. Rev
                 </p>
-                <p className="mt-1 text-lg font-black">$99k</p>
+                <p className="mt-1 text-lg font-black">৳99k</p>
               </div>
             </div>
           </div>

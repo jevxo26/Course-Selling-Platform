@@ -122,7 +122,7 @@ const ArchitectureProgress = () => {
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <AnimatedDollar
-                  value="$1,200/mo"
+                  value="৳1,200/mo"
                   isInView={isInView}
                   delay={0.3}
                 />
@@ -168,7 +168,7 @@ const ArchitectureProgress = () => {
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <AnimatedDollar
-                  value="$7,850/mo"
+                  value="৳7,850/mo"
                   isInView={isInView}
                   delay={0.65}
                 />
@@ -243,7 +243,7 @@ const ArchitectureProgress = () => {
                     <span style={{ fontStyle: "normal" }}>Success</span>
                   </h3>
                   <p className="text-[12px] text-white/50 leading-relaxed max-w-[220px]">
-                    I went from struggling freelancer to running a $10k/mo agency in
+                    I went from struggling freelancer to running a ৳10k/mo agency in
                     less than a year thanks to the systems here.
                   </p>
                 </motion.div>
@@ -265,7 +265,7 @@ const ArchitectureProgress = () => {
                 "
               </div>
               <p className="text-[13px] text-gray-600 leading-relaxed mb-3">
-                I went from struggling freelancer to running a $10k/mo agency in
+                I went from struggling freelancer to running a ৳10k/mo agency in
                 less than a year thanks to the systems here.
               </p>
               <div className="flex items-center gap-2">
@@ -293,7 +293,7 @@ const ArchitectureProgress = () => {
               <p className="text-[10px] font-semibold text-white/70 leading-none mb-0.5">
                 Avg. Income Jump
               </p>
-              <p className="text-base font-extrabold leading-none">+$6,650</p>
+              <p className="text-base font-extrabold leading-none">+৳6,650</p>
             </motion.div>
           </motion.div>
         </div>

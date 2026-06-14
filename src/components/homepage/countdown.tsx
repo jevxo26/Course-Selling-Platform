@@ -179,7 +179,7 @@ const CountDownTrust = () => {
       id: 2,
       label: "Total Earnings",
       value: revValue || 12.4,
-      prefix: "$",
+      prefix: "৳",
       suffix: revSuffix || "M+",
       decimals: revDecimals || 1,
       icon: <DollarSign className="w-6 h-6" />,

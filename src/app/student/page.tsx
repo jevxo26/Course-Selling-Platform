@@ -246,7 +246,7 @@ export default function StudentDashboardPage() {
 
           <div className="flex items-baseline gap-1.5 mt-1.5">
             <h2 className="text-[20px] sm:text-[26px] font-black text-slate-900 leading-none tracking-tight">
-              ${stats.currentBalance.amount.toLocaleString()}
+              ৳{stats.currentBalance.amount.toLocaleString()}
             </h2>
           </div>
 
@@ -280,7 +280,7 @@ export default function StudentDashboardPage() {
 
           <div className="flex items-baseline gap-1.5 mt-1.5">
             <h2 className="text-[20px] sm:text-[26px] font-black text-slate-900 leading-none tracking-tight">
-              ${stats.affiliateEarnings.amount.toLocaleString()}
+              ৳{stats.affiliateEarnings.amount.toLocaleString()}
             </h2>
           </div>
 

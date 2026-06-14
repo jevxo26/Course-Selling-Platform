@@ -32,10 +32,10 @@ const scaleUp = {
 };
 
 const rows = [
-  { label: "Figma UI Kit", pct: 78, color: "#4f46e5", earn: "$1,240" },
-  { label: "React Bootcamp", pct: 62, color: "#10B981", earn: "$980" },
-  { label: "SEO Mastery", pct: 45, color: "#818cf8", earn: "$670" },
-  { label: "Copywriting", pct: 91, color: "#F59E0B", earn: "$1,400" },
+  { label: "Figma UI Kit", pct: 78, color: "#4f46e5", earn: "৳1,240" },
+  { label: "React Bootcamp", pct: 62, color: "#10B981", earn: "৳980" },
+  { label: "SEO Mastery", pct: 45, color: "#818cf8", earn: "৳670" },
+  { label: "Copywriting", pct: 91, color: "#F59E0B", earn: "৳1,400" },
 ];
 
 function HomeHero() {
@@ -46,21 +46,21 @@ function HomeHero() {
 
   const totalStudents = statsData
     ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
-      )
+      statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
+    )
     : 50000;
 
   const rawRevenue = statsData
     ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
-      )
+      statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
+    )
     : 12400000;
 
   const totalCourses = statsData
     ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
-          "0",
-      )
+      statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
+      "0",
+    )
     : 120;
 
   const formatStudents = (n: number) =>
@@ -68,10 +68,10 @@ function HomeHero() {
 
   const formatRevenue = (n: number) =>
     n >= 1000000
-      ? `$${(n / 1000000).toFixed(1)}M+`
+      ? `৳${(n / 1000000).toFixed(1)}M+`
       : n >= 1000
-        ? `$${(n / 1000).toFixed(0)}k+`
-        : `$${n}+`;
+        ? `৳${(n / 1000).toFixed(0)}k+`
+        : `৳${n}+`;
 
   const stats = [
     {
@@ -149,10 +149,8 @@ function HomeHero() {
               custom={0}
             >
               <span
-                className="px-4 py-1.5 rounded-full text-xs font-black tracking-widest text-white shadow-md"
-                style={{
-                  background: "linear-gradient(135deg, #0047FF, ##0047FF)", 
-                }}
+                className="px-4 py-1.5 rounded-full text-black text-xs font-black tracking-widest shadow-md"
+
               >
                 FINANCIAL EVOLUTION
               </span>
@@ -197,7 +195,7 @@ function HomeHero() {
 
             {/* buttons */}
             <motion.div
-              className="grid grid-cols-2 items-stretch sm:items-center gap-3 pt-1"
+              className="grid grid-cols-1 items-stretch sm:items-center gap-3 pt-1"
               variants={fadeUp}
               initial="hidden"
               animate="show"
@@ -302,17 +300,17 @@ function HomeHero() {
                     {[
                       {
                         label: "Total Earned",
-                        val: statsData ? formatRevenue(rawRevenue) : "$18,420",
+                        val: statsData ? formatRevenue(rawRevenue) : "৳18,420",
                         color: "text-emerald-400",
                       },
                       {
                         label: "This Month",
-                        val: "$4,290",
+                        val: "৳4,290",
                         color: "text-indigo-400",
                       },
                       {
                         label: "Pending",
-                        val: "$830",
+                        val: "৳830",
                         color: "text-yellow-400",
                       },
                     ].map(({ label, val, color }) => (
@@ -433,7 +431,7 @@ function HomeHero() {
                       background: "linear-gradient(135deg, #4f46e5, #6366f1)",
                     }}
                   >
-                    <DollarSign className="h-6 w-6 text-white" />
+                    <span className="text-2xl">৳</span>
                   </div>
                 </div>
                 <div>
@@ -441,7 +439,7 @@ function HomeHero() {
                     Weekly Payout
                   </p>
                   <p className="text-xl font-extrabold text-indigo-600 tracking-tight">
-                    +$4,290.00
+                    ৳4,290.00
                   </p>
                 </div>
               </motion.div>

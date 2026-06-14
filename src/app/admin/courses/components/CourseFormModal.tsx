@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Check, Loader2, DollarSign, Link as LinkIcon, Image as ImageIcon, User, ShieldCheck, Upload } from "lucide-react";
+import { Check, Loader2, Link as LinkIcon, User, ShieldCheck } from "lucide-react";
 import { UiCourse } from "./types";
 import ModalShell from "./ModalShell";
 import { uploadImageToBackend } from "@/lib/images.upload";
@@ -48,15 +48,15 @@ export default function CourseFormModal({
   );
   const [price, setPrice] = useState(initial?.price ? String(initial.price) : "");
   const [discountPrice, setDiscountPrice] = useState(initial?.discountPrice ? String(initial.discountPrice) : "");
-  
+
   const [thumbnail, setThumbnail] = useState(initial?.thumbnail ?? "");
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  
+
   const [courseUrl, setCourseUrl] = useState(initial?.courseUrl ?? "");
   const [level, setLevel] = useState(initial?.level ?? "");
   const [isPremium, setIsPremium] = useState(initial?.is_premium ?? false);
   const [isPublished, setIsPublished] = useState(initial?.isPublished ?? false);
-  
+
   const [uploadingImg, setUploadingImg] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -77,9 +77,9 @@ export default function CourseFormModal({
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length > 0) return;
-    
+
     let finalThumbnail = thumbnail;
-    
+
     if (thumbnailFile) {
       setUploadingImg(true);
       try {
@@ -91,7 +91,7 @@ export default function CourseFormModal({
       }
       setUploadingImg(false);
     }
-    
+
     onSubmit({
       title: title.trim(),
       slug: slug.trim() || undefined,
@@ -118,35 +118,34 @@ export default function CourseFormModal({
       loading={isBusy}
       onClose={onClose}
     >
-      <div className="space-y-4 max-h-[70vh] overflow-y-auto px-1 pb-2 scrollbar-thin">
+      <div className="space-y-5 max-h-[70vh] overflow-y-auto px-1 pb-2 scrollbar-thin">
+        {/* Row 1: Title & Category */}
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Title <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Title <span className="text-red-500">*</span>
             </label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="E.g. Advanced Next.js"
-              className={`w-full h-9 px-3 text-[12px] border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
-                errors.title ? "border-red-400 bg-red-50" : "border-gray-200"
-              }`}
+              className={`w-full h-10 px-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-colors text-black ${errors.title ? "border-red-400 bg-red-50" : "border-gray-300 bg-white"
+                }`}
             />
             {errors.title && (
-              <p className="text-[10px] text-red-500 mt-1">{errors.title}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.title}</p>
             )}
           </div>
 
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Category <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Category <span className="text-red-500">*</span>
             </label>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className={`w-full h-9 px-3 text-[12px] border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 ${
-                errors.categoryId ? "border-red-400 bg-red-50" : "border-gray-200"
-              }`}
+              className={`w-full h-10 px-3 text-sm border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-colors ${errors.categoryId ? "border-red-400 bg-red-50" : "border-gray-300 bg-white"
+                }`}
             >
               <option value="" disabled>Select a category...</option>
               {categories.map((cat) => (
@@ -156,24 +155,25 @@ export default function CourseFormModal({
               ))}
             </select>
             {errors.categoryId && (
-              <p className="text-[10px] text-red-500 mt-1">{errors.categoryId}</p>
+              <p className="text-xs text-red-500 mt-1">{errors.categoryId}</p>
             )}
           </div>
         </div>
-        
+
+        {/* Row 2: Instructor & Level */}
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Instructor <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Instructor <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <User size={12} />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <User size={14} />
               </div>
               <select
                 value={instructorId}
                 onChange={(e) => setInstructorId(e.target.value)}
-                className="w-full h-9 pl-8 pr-3 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
+                className="w-full h-10 pl-9 pr-3 text-sm border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
               >
                 <option value="">Select instructor...</option>
                 {instructors.map((inst) => (
@@ -185,13 +185,13 @@ export default function CourseFormModal({
             </div>
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Level <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Level <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full h-9 px-3 text-[12px] border rounded-xl border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
+              className="w-full h-10 px-3 text-sm border  text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
             >
               <option value="">Select level...</option>
               <option value="Beginner">Beginner</option>
@@ -202,14 +202,15 @@ export default function CourseFormModal({
           </div>
         </div>
 
+        {/* Row 3: Slug & Thumbnail */}
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Slug <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Slug <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <LinkIcon size={12} />
+              <div className="absolute inset-y-0 text-black left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                <LinkIcon size={14} />
               </div>
               <input
                 value={slug}
@@ -218,14 +219,14 @@ export default function CourseFormModal({
                   setManualSlug(true);
                 }}
                 placeholder="advanced-next-js"
-                className="w-full h-9 pl-8 pr-3 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-full h-10 pl-9 pr-3 text-black text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
               />
             </div>
           </div>
 
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Thumbnail Upload <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Thumbnail <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="relative flex items-center">
               <input
@@ -236,84 +237,88 @@ export default function CourseFormModal({
                     setThumbnailFile(e.target.files[0]);
                   }
                 }}
-                className="w-full h-9 px-3 py-1.5 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 file:border-0 file:bg-indigo-50 file:text-indigo-600 file:font-semibold file:px-2 file:py-0.5 file:rounded-md file:mr-2 file:cursor-pointer cursor-pointer text-gray-600"
+                className="w-full h-10 px-3 py-1.5  text-black text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-semibold file:px-3 file:py-1 file:rounded-md file:mr-3 file:cursor-pointer cursor-pointer text-gray-600 bg-white transition-colors"
               />
             </div>
             {(thumbnail || thumbnailFile) && (
-               <p className="text-[9px] text-gray-400 mt-1 truncate">
-                 {thumbnailFile ? `Selected: ${thumbnailFile.name}` : `Current: ${thumbnail}`}
-               </p>
+              <p className="text-xs text-gray-500 mt-1 truncate">
+                {thumbnailFile ? `Selected: ${thumbnailFile.name}` : `Current: ${thumbnail}`}
+              </p>
             )}
           </div>
         </div>
 
+        {/* Row 4: Price & Discount Price (BDT) */}
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Price <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Price (৳) <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <DollarSign size={12} />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600 font-bold text-sm">
+                ৳
               </div>
               <input
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="2500"
-                className="w-full h-9 pl-8 pr-3 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-full h-10 pl-8 pr-3 text-black text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
               />
             </div>
           </div>
 
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-              Discount Price <span className="text-gray-300 normal-case font-normal">(optional)</span>
+            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              Discount Price (৳) <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <DollarSign size={12} />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600 font-bold text-sm">
+                ৳
               </div>
               <input
                 type="number"
                 value={discountPrice}
                 onChange={(e) => setDiscountPrice(e.target.value)}
                 placeholder="1800"
-                className="w-full h-9 pl-8 pr-3 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-full h-10 pl-8 pr-3 text-sm text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
               />
             </div>
           </div>
         </div>
 
+        {/* Course URL */}
         <div>
-          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-            Course URL <span className="text-gray-300 normal-case font-normal">(optional)</span>
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+            Course URL <span className="text-gray-400 font-normal">(optional)</span>
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-              <LinkIcon size={12} />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+              <LinkIcon size={14} />
             </div>
             <input
               value={courseUrl}
               onChange={(e) => setCourseUrl(e.target.value)}
               placeholder="https://yoursite.com/courses/nextjs"
-              className="w-full h-9 pl-8 pr-3 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full h-10 pl-9 pr-3 text-sm border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors"
             />
           </div>
         </div>
 
+        {/* Description */}
         <div>
-          <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
-            Description <span className="text-gray-300 normal-case font-normal">(optional)</span>
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+            Description <span className="text-gray-400 font-normal">(optional)</span>
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full min-h-[90px] px-3 py-2 text-[12px] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full min-h-[100px] px-3 py-2 text-sm text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition-colors resize-y"
           />
         </div>
 
-        <div className="flex items-center gap-6 mt-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+        {/* Checkboxes */}
+        <div className="flex items-center gap-6 mt-2 bg-gray-100/50 p-4 rounded-lg border border-gray-200">
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -322,11 +327,11 @@ export default function CourseFormModal({
               onChange={(e) => setIsPremium(e.target.checked)}
               className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"
             />
-            <label htmlFor="isPremium" className="text-[12px] font-semibold text-gray-700 select-none cursor-pointer flex items-center gap-1">
-              <ShieldCheck size={14} className="text-indigo-500" /> Premium Course
+            <label htmlFor="isPremium" className="text-sm font-medium text-gray-700 select-none cursor-pointer flex items-center gap-1.5">
+              <ShieldCheck size={15} className="text-indigo-600" /> Premium Course
             </label>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -335,26 +340,27 @@ export default function CourseFormModal({
               onChange={(e) => setIsPublished(e.target.checked)}
               className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-gray-300"
             />
-            <label htmlFor="isPublished" className="text-[12px] font-semibold text-gray-700 select-none cursor-pointer">
+            <label htmlFor="isPublished" className="text-sm font-medium text-gray-700 select-none cursor-pointer">
               Publish immediately
             </label>
           </div>
         </div>
 
-        <div className="flex gap-2.5 pt-4">
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-5">
           <button
             onClick={onClose}
             disabled={isBusy}
-            className="flex-1 py-2.5 rounded-xl border-2 border-gray-200 text-[12px] font-semibold text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-60"
+            className="flex-1 py-2.5 rounded-lg border-2 border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-60"
           >
             Cancel
           </button>
           <button
             onClick={submit}
             disabled={isBusy}
-            className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-[12px] font-semibold flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-200 transition-colors disabled:opacity-60"
+            className="flex-1 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md shadow-indigo-200 transition-colors disabled:opacity-60"
           >
-            {isBusy ? <Loader2 size={14} className="animate-spin" /> : <Check size={13} />}
+            {isBusy ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
             {uploadingImg ? "Uploading Image..." : initial ? "Save Changes" : "Create Course"}
           </button>
         </div>

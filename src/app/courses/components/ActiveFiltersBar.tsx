@@ -52,7 +52,7 @@ export default function ActiveFiltersBar({
             )}
             {maxPrice < 2000 && (
               <FilterTag
-                label={`≤ $${maxPrice.toLocaleString()}`}
+                label={`≤ ৳${maxPrice.toLocaleString()}`}
                 onRemove={() => handlePriceChange(2000)}
               />
             )}

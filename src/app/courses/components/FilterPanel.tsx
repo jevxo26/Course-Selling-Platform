@@ -6,16 +6,16 @@ import FilterTag from "./FilterTag";
 
 const EARNING_TIERS = [
   {
-    label: "$1k - $5k /mo",
+    label: "৳1k - ৳5k /mo",
     badge: "Starter",
     color: "from-slate-500 to-slate-700",
   },
   {
-    label: "$5k - $10k /mo",
+    label: "৳5k - ৳10k /mo",
     badge: "Growth",
     color: "from-blue-500 to-indigo-600",
   },
-  { label: "$10k+ / mo", badge: "Pro", color: "from-amber-500 to-orange-600" },
+  { label: "৳10k+ / mo", badge: "Pro", color: "from-amber-500 to-orange-600" },
 ];
 
 interface Props {
@@ -68,7 +68,7 @@ export default function FilterPanel({
             <Tag className="w-3 h-3" /> Price Range
           </p>
           <span className="text-[12px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
-            Up to ${maxPrice.toLocaleString()}
+            Up to ৳{maxPrice.toLocaleString()}
           </span>
         </div>
         <div className="relative pt-1 pb-2">
@@ -89,8 +89,8 @@ export default function FilterPanel({
           />
         </div>
         <div className="flex justify-between text-[11px] text-slate-400 font-medium">
-          <span>$1</span>
-          <span>${maxPriceLimit.toLocaleString()}</span>
+          <span>৳1</span>
+          <span>৳{maxPriceLimit.toLocaleString()}</span>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function FilterPanel({
                 {/* price filter – show only when NOT at max limit */}
                 {isPriceFilterActive && (
                   <FilterTag
-                    label={`≤ $${maxPrice.toLocaleString()}`}
+                    label={`≤ ৳${maxPrice.toLocaleString()}`}
                     onRemove={() => handlePriceChange(maxPriceLimit)}
                   />
                 )}

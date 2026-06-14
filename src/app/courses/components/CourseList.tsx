@@ -117,7 +117,7 @@ export default function CourseList() {
       price: Number(c.price ?? 0),
       category: c.category?.name ?? "Uncategorized",
       potential:
-        Number(c.price) > 100 ? "$10k+/mo Potential" : "$2k+/mo Potential",
+        Number(c.price) > 100 ? "৳10k+/mo Potential" : "৳2k+/mo Potential",
       potentialVal: Number(c.price) > 100 ? 10000 : 2000,
       commission: "0%",
       commissionVal: 0,

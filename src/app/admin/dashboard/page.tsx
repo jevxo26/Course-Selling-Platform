@@ -245,7 +245,7 @@ export default function Dashboard() {
   const activities = statsData?.activities || [];
   const kpis = statsData?.kpis || {
     totalActiveUsers: 0,
-    revenueMTD: "$0",
+    revenueMTD: "৳0",
     completedTransactions: 0,
   };
 
@@ -325,7 +325,7 @@ export default function Dashboard() {
             up: true,
           },
           {
-            icon: <DollarSign size={17} className="text-emerald-600" />,
+            icon: <div className="text-emerald-600 font-extrabold text-[17px] leading-none text-center min-w-[17px]">৳</div>,
             bg: "bg-emerald-50",
             label: "Revenue",
             value: kpis.revenueMTD,
@@ -348,11 +348,10 @@ export default function Dashboard() {
             <div className="flex items-start justify-between mb-3">
               <div className={`${c.bg} p-2 rounded-lg`}>{c.icon}</div>
               <span
-                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                  c.up
+                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${c.up
                     ? "bg-emerald-50 text-emerald-600"
                     : "bg-red-50 text-red-500"
-                }`}
+                  }`}
               >
                 {c.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
                 {c.badge}
@@ -362,7 +361,7 @@ export default function Dashboard() {
               {c.label}
             </p>
             <p className="text-[22px] font-extrabold text-gray-900 mt-0.5 tracking-tight">
-              {c.value}
+              {typeof c.value === 'string' ? c.value.replace('$', '৳') : c.value}
             </p>
           </div>
         ))}
@@ -386,11 +385,10 @@ export default function Dashboard() {
                 <button
                   key={v}
                   onClick={() => handleChartView(v)}
-                  className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-all ${
-                    chartView === v
+                  className={`text-[11px] font-semibold px-3 py-1 rounded-md transition-all ${chartView === v
                       ? "bg-indigo-600 text-white shadow-sm"
                       : "text-gray-500 hover:text-gray-700"
-                  }`}
+                    }`}
                 >
                   {v}
                 </button>
@@ -411,9 +409,9 @@ export default function Dashboard() {
                 label: "Avg",
                 value: chartData?.length
                   ? Math.round(
-                      chartData.reduce((s: number, d: any) => s + d.value, 0) /
-                        chartData.length,
-                    )
+                    chartData.reduce((s: number, d: any) => s + d.value, 0) /
+                    chartData.length,
+                  )
                   : 0,
               },
               {
@@ -514,11 +512,10 @@ export default function Dashboard() {
             <div className="relative">
               <button
                 onClick={() => setFilterOpen(!filterOpen)}
-                className={`p-1.5 border rounded-lg transition-colors ${
-                  filterOpen || statusFilter !== "All"
+                className={`p-1.5 border rounded-lg transition-colors ${filterOpen || statusFilter !== "All"
                     ? "border-indigo-400 bg-indigo-50 text-indigo-600"
                     : "border-gray-200 hover:bg-gray-50 text-gray-500"
-                }`}
+                  }`}
               >
                 <SlidersHorizontal size={14} />
               </button>
@@ -534,11 +531,10 @@ export default function Dashboard() {
                         setStatusFilter(s);
                         setFilterOpen(false);
                       }}
-                      className={`w-full text-left px-2 py-1.5 text-[12px] font-medium rounded-lg transition-colors ${
-                        statusFilter === s
+                      className={`w-full text-left px-2 py-1.5 text-[12px] font-medium rounded-lg transition-colors ${statusFilter === s
                           ? "bg-indigo-50 text-indigo-700"
                           : "text-gray-600 hover:bg-gray-50"
-                      }`}
+                        }`}
                     >
                       {s}
                     </button>
@@ -609,18 +605,17 @@ export default function Dashboard() {
                       {tx.product}
                     </td>
                     <td className="px-4 py-3 text-[12px] font-bold text-gray-900">
-                      {tx.amount}
+                      ৳{String(tx.amount).replace(/[\$৳]/g, '')}
                     </td>
                     <td className="px-4 py-3 text-[12px] text-gray-400">
                       {tx.date}
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
-                          tx.status === "Success"
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${tx.status === "Success"
                             ? "bg-emerald-50 text-emerald-700"
                             : "bg-red-50 text-red-600"
-                        }`}
+                          }`}
                       >
                         {tx.status}
                       </span>
@@ -646,11 +641,10 @@ export default function Dashboard() {
                     {tx.id}
                   </span>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      tx.status === "Success"
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${tx.status === "Success"
                         ? "bg-emerald-50 text-emerald-700"
                         : "bg-red-50 text-red-600"
-                    }`}
+                      }`}
                   >
                     {tx.status}
                   </span>
@@ -668,7 +662,7 @@ export default function Dashboard() {
                     {tx.product}
                   </span>
                   <span className="text-[13px] font-extrabold text-gray-900 shrink-0">
-                    {tx.amount}
+                    ৳{String(tx.amount).replace(/[\$৳]/g, '')}
                   </span>
                 </div>
                 <p className="text-[10px] text-gray-400 font-medium">

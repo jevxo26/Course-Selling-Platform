@@ -43,7 +43,7 @@ export default function CourseDetailsPage({
         image: raw.thumbnail ?? "/placeholder.jpg",
         price: Number(raw.price ?? 0),
         category: raw.category?.name ?? "Uncategorized",
-        potential: "$10k+/mo Potential",
+        potential: "৳10k+/mo Potential",
         commission: "0%",
         rating: 4.9,
         reviews: "1.2k",
@@ -277,10 +277,10 @@ export default function CourseDetailsPage({
               </div>
               <div className="flex items-end justify-center gap-1 mb-2">
                 <span className="text-3xl font-bold text-slate-400 line-through">
-                  ${Math.floor(course.price * 1.5)}
+                  ৳{Math.floor(course.price * 1.5)}
                 </span>
                 <span className="text-5xl font-black text-slate-900 tracking-tight">
-                  ${course.price}
+                  ৳{course.price}
                 </span>
               </div>
               <p className="text-sm font-semibold text-emerald-600 mb-6">

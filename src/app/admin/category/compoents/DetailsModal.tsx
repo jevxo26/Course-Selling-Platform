@@ -65,16 +65,14 @@ export function DetailsModal({
             </div>
             <div className="flex gap-1.5 flex-wrap">
               <span
-                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full ${
-                  cat.status === "Active"
+                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full ${cat.status === "Active"
                     ? "bg-emerald-50 text-emerald-700"
                     : "bg-red-50 text-red-500"
-                }`}
+                  }`}
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    cat.status === "Active" ? "bg-emerald-500" : "bg-red-400"
-                  }`}
+                  className={`w-1.5 h-1.5 rounded-full ${cat.status === "Active" ? "bg-emerald-500" : "bg-red-400"
+                    }`}
                 />
                 {cat.status}
               </span>
@@ -124,14 +122,14 @@ export function DetailsModal({
             </p>
           )}
 
-          <details>
+          {/* <details>
             <summary className="cursor-pointer text-[11px] font-bold text-indigo-500 hover:text-indigo-700 transition-colors list-none">
               View raw JSON ↓
             </summary>
             <pre className="mt-2 text-[10px] text-gray-600 bg-gray-50 border border-gray-200 rounded-xl p-3 overflow-auto max-h-[200px]">
               {JSON.stringify(data ?? null, null, 2)}
             </pre>
-          </details>
+          </details> */}
         </div>
       ) : null}
     </ModalShell>

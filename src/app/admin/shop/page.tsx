@@ -14,7 +14,6 @@ import {
   Loader2,
   ShoppingBag,
   Package,
-  DollarSign,
   Mail,
   X,
   RefreshCw,
@@ -104,6 +103,11 @@ export default function AdminShopPage() {
     0,
   );
 
+  // Format currency in BDT
+  const formatBDT = (amount: number) => {
+    return `৳${amount.toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className=" mx-auto p-3 sm:p-4 lg:p-6 space-y-4">
@@ -162,17 +166,17 @@ export default function AdminShopPage() {
                 bg: "bg-blue-50",
               },
               {
-                label: "Revenue",
-                value: `$${totalRevenue.toFixed(2)}`,
-                icon: DollarSign,
+                label: "Total Revenue",
+                value: formatBDT(totalRevenue),
+                icon: TrendingUp,
                 color: "text-emerald-600",
                 bg: "bg-emerald-50",
               },
               {
                 label: "Avg. Price",
                 value: shopItems.length
-                  ? `$${(totalRevenue / shopItems.length).toFixed(2)}`
-                  : "$0.00",
+                  ? formatBDT(totalRevenue / shopItems.length)
+                  : "৳০.০০",
                 icon: TrendingUp,
                 color: "text-indigo-600",
                 bg: "bg-indigo-50",
@@ -295,7 +299,7 @@ export default function AdminShopPage() {
                         {/* Price */}
                         <td className="px-5 py-3.5">
                           <span className="text-[13px] font-extrabold text-gray-900">
-                            ${Number(item.price).toFixed(2)}
+                            ৳{Number(item.price).toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
                         </td>
                         {/* Actions */}
@@ -346,8 +350,8 @@ export default function AdminShopPage() {
                         <p className="text-[13px] font-bold text-gray-900 truncate leading-tight">
                           {item.name}
                         </p>
-                        <span className="text-[13px] font-extrabold text-blue-600 shrink-0">
-                          ${Number(item.price).toFixed(2)}
+                        <span className="text-[13px] font-extrabold text-emerald-600 shrink-0">
+                          ৳{Number(item.price).toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 mt-1">
@@ -437,11 +441,10 @@ export default function AdminShopPage() {
                 </label>
                 <label className="relative cursor-pointer group">
                   <div
-                    className={`w-full h-28 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all ${
-                      previewUrl
-                        ? "border-blue-300 bg-blue-50/50"
-                        : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/30"
-                    }`}
+                    className={`w-full h-28 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all ${previewUrl
+                      ? "border-blue-300 bg-blue-50/50"
+                      : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/30"
+                      }`}
                   >
                     {previewUrl ? (
                       <img
@@ -536,20 +539,25 @@ export default function AdminShopPage() {
               {/* Price */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
-                  <DollarSign size={11} className="text-slate-400" />
-                  Price ($)
+                  <span className="text-base font-bold text-slate-700">৳</span>
+                  Price <span className="text-slate-400 normal-case font-normal">(optional)</span>
                 </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.price}
-                  onChange={(e) =>
-                    setFormData({ ...formData, price: e.target.value })
-                  }
-                  placeholder="e.g. 99"
-                  className="w-full px-3.5 py-3 text-[13px] font-semibold border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <span className="text-slate-500 font-bold text-sm">৳</span>
+                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
+                    placeholder="০.০০"
+                    className="w-full pl-10 pr-3.5 py-3 text-[13px] font-semibold border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
               </div>
             </div>
 

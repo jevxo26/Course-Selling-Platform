@@ -92,7 +92,7 @@ export default function AdminCourseTable({
                         <img src={c.thumbnail} alt={c.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-200" />
                       ) : (
                         <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 border border-gray-200">
-                          <span className="text-[10px] text-gray-400 font-semibold text-center leading-tight">No<br/>Img</span>
+                          <span className="text-[10px] text-gray-400 font-semibold text-center leading-tight">No<br />Img</span>
                         </div>
                       )}
                       <div className="min-w-0">
@@ -117,11 +117,11 @@ export default function AdminCourseTable({
                   <td className="px-4 py-3">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[13px] font-bold text-gray-900">
-                        ${Number(c.discountPrice ?? c.price ?? 0).toFixed(2)}
+                        ৳{Number(c.discountPrice ?? c.price ?? 0).toFixed(2)}
                       </span>
                       {c.discountPrice && c.price && Number(c.discountPrice) < Number(c.price) && (
                         <span className="text-[11px] text-gray-400 line-through">
-                          ${Number(c.price).toFixed(2)}
+                          ৳{Number(c.price).toFixed(2)}
                         </span>
                       )}
                     </div>

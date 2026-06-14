@@ -627,7 +627,6 @@ function Header() {
 
       {/* Spacers */}
       <div className="h-[60px] lg:h-[68px]" />
-      <div className="lg:hidden h-[60px]" />
     </>
   );
 }

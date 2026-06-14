@@ -13,7 +13,6 @@ import {
   Banknote,
   Package,
   Tag,
-  DollarSign,
   Clock,
   BarChart3,
   TrendingUp,
@@ -38,6 +37,10 @@ import { toast } from "sonner";
 import { useStudentMyProductsQuery } from "@/lib/api/student/products";
 import { useStudentWithdrawRequestMutation } from "@/lib/api/student/withdraw";
 import CreateProductModal from "./CreateProductModal";
+
+const TakaIcon = ({ className }: { className?: string }) => (
+  <span className={`font-extrabold flex items-center justify-center leading-none ${className || ""}`}>৳</span>
+);
 
 /* ─── Types ──────────────────────────────────────────────────────── */
 type UiUser = {
@@ -177,11 +180,11 @@ function toUi(raw: any): UiProduct | null {
   const title =
     String(
       raw?.botName ??
-        raw?.title ??
-        raw?.name ??
-        raw?.productName ??
-        raw?.course?.title ??
-        "—",
+      raw?.title ??
+      raw?.name ??
+      raw?.productName ??
+      raw?.course?.title ??
+      "—",
     ).trim() || "—";
   const category =
     String(
@@ -371,11 +374,10 @@ function UserCard({ user }: { user: UiUser }) {
         </div>
         {user.isActive !== undefined && (
           <span
-            className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border flex-shrink-0 ${
-              user.isActive
-                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                : "bg-gray-100 text-gray-500 border-gray-200"
-            }`}
+            className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border flex-shrink-0 ${user.isActive
+              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+              : "bg-gray-100 text-gray-500 border-gray-200"
+              }`}
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${user.isActive ? "bg-emerald-500" : "bg-gray-400"}`}
@@ -559,7 +561,7 @@ function ProductDetailsModal({
                 </p>
                 <p className="text-2xl font-black">
                   {product.price !== "—"
-                    ? `$${Number(product.price).toLocaleString()}`
+                    ? `৳${Number(product.price).toLocaleString()}`
                     : "—"}
                 </p>
               </div>
@@ -589,10 +591,10 @@ function ProductDetailsModal({
               label="Price"
               value={
                 product.price !== "—"
-                  ? `$${Number(product.price).toLocaleString()}`
+                  ? `৳${Number(product.price).toLocaleString()}`
                   : "—"
               }
-              icon={DollarSign}
+              icon={TakaIcon}
             />
             <Field
               label="Created At"
@@ -712,7 +714,7 @@ function MobileProductCard({
             <div className="flex items-center gap-3 mt-1.5 flex-wrap">
               {p.price !== "—" && (
                 <span className="text-[12px] font-black text-gray-900 flex items-center gap-0.5">
-                  <DollarSign className="w-3 h-3 text-emerald-500" />
+                  <TakaIcon className="w-3 h-3 text-emerald-500" />
                   {Number(p.price).toLocaleString()}
                 </span>
               )}
@@ -746,7 +748,7 @@ function MobileProductCard({
 const COLUMNS = [
   { key: "product", label: "Product", icon: Package, sub: "Name & ID" },
   { key: "category", label: "Category", icon: Tag, sub: "Type" },
-  { key: "price", label: "Price", icon: DollarSign, sub: "Amount" },
+  { key: "price", label: "Price", icon: TakaIcon, sub: "Amount" },
   { key: "status", label: "Status", icon: BarChart3, sub: "State" },
   { key: "created", label: "Created", icon: Calendar, sub: "Date" },
   { key: "actions", label: "Actions", icon: ArrowUpRight, sub: "Operations" },
@@ -809,14 +811,8 @@ export default function StudentProductsManager() {
     <div className="min-h-screen pb-16 bg-white">
       {/* ── HEADER ─────────────────────────────────────────────────── */}
       <div className="border-b border-gray-200 px-4 sm:px-8 py-6">
-        <div className="w-full max-w-[1400px] mx-auto">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-[11px] font-semibold text-gray-400 mb-4">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Student Panel</span>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-indigo-600 font-bold">My Products</span>
-          </div>
+        <div className="w-full max-w-full mx-auto">
+
 
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div className="flex items-start gap-4">
@@ -824,11 +820,7 @@ export default function StudentProductsManager() {
                 <ShoppingBag className="w-7 h-7 text-white" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2.5 py-0.5">
-                    Student
-                  </span>
-                </div>
+
                 <h1 className="mt-1 text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
                   My Products
                 </h1>
@@ -872,7 +864,7 @@ export default function StudentProductsManager() {
             <StatCard
               icon={TrendingUp}
               label="Total Value"
-              value={`$${totalValue.toLocaleString()}`}
+              value={`৳${totalValue.toLocaleString()}`}
               color="bg-violet-100 text-violet-600"
             />
           </div>
@@ -880,7 +872,7 @@ export default function StudentProductsManager() {
       </div>
 
       {/* ── TABLE SECTION ──────────────────────────────────────────── */}
-      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-8 mt-7">
+      <div className="w-full max-w-full mx-auto px-4 sm:px-8 mt-7">
         <div className="rounded-3xl border border-gray-200 bg-white shadow-sm overflow-hidden">
           {/* Toolbar */}
           <div className="px-4 sm:px-5 py-4 border-b border-gray-100 bg-gray-50/40">
@@ -1076,12 +1068,12 @@ export default function StudentProductsManager() {
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-1">
-                            <DollarSign className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                            <TakaIcon className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                             <span className="text-[13px] font-black text-gray-900 tabular-nums">
                               {p.price !== "—"
                                 ? Number(p.price).toLocaleString("en-US", {
-                                    minimumFractionDigits: 2,
-                                  })
+                                  minimumFractionDigits: 2,
+                                })
                                 : "—"}
                             </span>
                           </div>

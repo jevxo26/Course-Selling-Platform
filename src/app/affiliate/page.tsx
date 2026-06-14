@@ -35,7 +35,7 @@ const cardVariant = {
 const stats = [
   { value: "40%", label: "Commission Rate" },
   { value: "12K+", label: "Active Affiliates" },
-  { value: "$500K+", label: "Total Paid Out" },
+  { value: "৳500K+", label: "Total Paid Out" },
   { value: "90 Days", label: "Cookie Window" },
 ];
 
@@ -101,8 +101,8 @@ const testimonials = [
     name: "Rafiq Sarker",
     role: "YouTuber · Dhaka",
     quote:
-      "Made my first $500 in the second month. The dashboard makes tracking so easy.",
-    earning: "$1.2K/mo",
+      "Made my first ৳500 in the second month. The dashboard makes tracking so easy.",
+    earning: "৳1.2K/mo",
     color: "bg-blue-50 text-blue-600 border-blue-100",
   },
   {
@@ -111,7 +111,7 @@ const testimonials = [
     role: "Blogger · Chittagong",
     quote:
       "The 90-day cookie window is a game changer. My passive income has tripled since joining.",
-    earning: "$850/mo",
+    earning: "৳850/mo",
     color: "bg-emerald-50 text-emerald-600 border-emerald-100",
   },
   {
@@ -120,7 +120,7 @@ const testimonials = [
     role: "Content Creator · Sylhet",
     quote:
       "Payouts are always on time. Best affiliate program I have ever worked with.",
-    earning: "$2K/mo",
+    earning: "৳2K/mo",
     color: "bg-purple-50 text-purple-600 border-purple-100",
   },
 ];
@@ -128,7 +128,7 @@ const testimonials = [
 const faqs = [
   {
     q: "Is there a minimum payout threshold?",
-    a: "Yes, the minimum payout is $10. Once you reach that, payments are processed on the 5th of each month.",
+    a: "Yes, the minimum payout is ৳10. Once you reach that, payments are processed on the 5th of each month.",
   },
   {
     q: "Can I promote on any platform?",
@@ -234,7 +234,7 @@ export default function AffiliatePage() {
 
               <div className="grid grid-cols-2 gap-2.5 mb-4">
                 {[
-                  { val: "$2,840", lbl: "This month" },
+                  { val: "৳2,840", lbl: "This month" },
                   { val: "142", lbl: "Referrals" },
                   { val: "30%", lbl: "Commission" },
                   { val: "89%", lbl: "Conversion" },
@@ -255,8 +255,8 @@ export default function AffiliatePage() {
 
               <div className="space-y-0 border-t border-slate-100 pt-3">
                 {[
-                  { label: "Last payout", val: "$1,920.00" },
-                  { label: "Pending", val: "$920.00" },
+                  { label: "Last payout", val: "৳1,920.00" },
+                  { label: "Pending", val: "৳920.00" },
                 ].map(({ label, val }) => (
                   <div
                     key={label}

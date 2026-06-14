@@ -147,13 +147,13 @@ const CourseSection = () => {
 
     return {
       id: c.id,
-      tag: Number(c.price) > 100 ? "$10k+/mo Potential" : "$2k+/mo Potential",
+      tag: Number(c.price) > 100 ? "৳10k+/mo Potential" : "৳2k+/mo Potential",
       tagColor: colorSet.tagColor,
       tagBg: colorSet.tagBg,
       category: c.category?.name || "GENERAL",
       categoryColor: "#0052CC",
       title: c.title,
-      price: `$${c.price}`,
+      price: `৳${c.price}`,
       rating: "4.9",
       students: c.enrollmentCount
         ? `${(c.enrollmentCount / 1000).toFixed(1)}k`

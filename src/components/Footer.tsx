@@ -106,7 +106,7 @@ function Footer() {
 
   return (
     <footer
-      className={`${plusJakarta.className} bg-[#DFE2FF] border-t border-indigo-200/40 `}
+      className={`${plusJakarta.className} bg-[#DFE2FF] border-t border-indigo-200/40 pb-[80px] lg:pb-0`}
     >
       {/* ── Top Grid ── */}
       <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 sm:px-8 py-8 sm:py-10 border-b border-indigo-200/30">

@@ -120,20 +120,20 @@ function toUi(raw: any): UiPaymentMethod | null {
   const account =
     String(
       raw?.accountNumber ??
-        raw?.account ??
-        raw?.phone ??
-        raw?.walletNumber ??
-        raw?.number ??
-        "",
+      raw?.account ??
+      raw?.phone ??
+      raw?.walletNumber ??
+      raw?.number ??
+      "",
     ).trim() || "—";
   const owner =
     String(
       raw?.user?.name ??
-        raw?.user?.email ??
-        raw?.owner?.name ??
-        raw?.owner ??
-        raw?.nameOnAccount ??
-        "",
+      raw?.user?.email ??
+      raw?.owner?.name ??
+      raw?.owner ??
+      raw?.nameOnAccount ??
+      "",
     ).trim() || "—";
   const createdAt = formatDate(raw?.createdAt ?? raw?.created_at);
   const balance = raw?.balance;
@@ -598,7 +598,7 @@ export default function AdminPaymentMethodsPage(): React.JSX.Element {
         />
       )}
 
-      <div className="min-h-screen bg-gray-50/60 p-3 sm:p-4 lg:p-6">
+      <div className="min-h-screen bg-white p-3 sm:p-4 lg:p-6">
         {/* ── Header ── */}
         <div className="flex items-start justify-between mb-5 sm:mb-6 gap-3">
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -678,11 +678,10 @@ export default function AdminPaymentMethodsPage(): React.JSX.Element {
             {/* Filter toggle button — mobile only */}
             <button
               onClick={() => setFiltersOpen((v) => !v)}
-              className={`sm:hidden h-9 w-9 rounded-xl border flex items-center justify-center transition-colors flex-shrink-0 ${
-                filtersOpen || type || status
-                  ? "border-violet-300 bg-violet-50 text-violet-600"
-                  : "border-gray-200 text-gray-500 hover:bg-gray-50"
-              }`}
+              className={`sm:hidden h-9 w-9 rounded-xl border flex items-center justify-center transition-colors flex-shrink-0 ${filtersOpen || type || status
+                ? "border-violet-300 bg-violet-50 text-violet-600"
+                : "border-gray-200 text-gray-500 hover:bg-gray-50"
+                }`}
             >
               <SlidersHorizontal size={15} />
             </button>

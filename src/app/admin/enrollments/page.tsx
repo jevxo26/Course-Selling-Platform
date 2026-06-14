@@ -26,6 +26,11 @@ import {
 } from "@/lib/api/admin/enrollments";
 import { useAdminCoursesQuery } from "@/lib/api/admin/course";
 import { useAdminUsersQuery } from "@/lib/api/admin/user";
+import type { ColumnDef } from "@tanstack/react-table";
+import {
+  DataTable,
+  DataTableColumnHeader,
+} from "@/components/share/Table-Share";
 
 type UiEnrollment = {
   id: number | string;
@@ -536,6 +541,113 @@ export default function AdminEnrollmentsPage() {
   const [manualPayment, { isLoading: isManualPaying }] =
     useAdminEnrollmentsManualPaymentMutation();
 
+  const columns = useMemo<ColumnDef<UiEnrollment, unknown>[]>(
+    () => [
+      {
+        accessorKey: "student",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Student" />
+        ),
+        cell: ({ row }) => {
+          const e = row.original;
+          return (
+            <div>
+              <p className="font-bold text-gray-900">{e.student}</p>
+              <p className="text-[11px] text-gray-500">{e.studentEmail}</p>
+              <p className="text-[11px] text-gray-400">ID: {e.id}</p>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "course",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Course" />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-800">{row.original.course}</span>
+        ),
+      },
+      {
+        accessorKey: "amount",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Amount" />
+        ),
+        cell: ({ row }) => (
+          <span className="font-extrabold text-gray-900">৳{row.original.amount}</span>
+        ),
+      },
+      {
+        accessorKey: "status",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+        cell: ({ row }) => {
+          const e = row.original;
+          return (
+            <span
+              className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold ${e.status === "completed" || e.status === "paid"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-amber-100 text-amber-700"
+                }`}
+            >
+              {e.status}
+            </span>
+          );
+        },
+      },
+      {
+        id: "payment",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Payment" />
+        ),
+        cell: ({ row }) => {
+          const e = row.original;
+          return (
+            <div className="text-sm">
+              <p className="font-semibold capitalize">{e.paymentMethod}</p>
+              {e.transactionId && (
+                <p className="text-[11px] text-gray-500">TRX: {e.transactionId}</p>
+              )}
+              {e.isManual && (
+                <span className="text-[10px] text-purple-600 font-bold">MANUAL</span>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "createdAt",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Created" />
+        ),
+        cell: ({ row }) => (
+          <span className="text-[12px] text-gray-600">{row.original.createdAt}</span>
+        ),
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        enableSorting: false,
+        enableHiding: false,
+        cell: ({ row }) => {
+          const e = row.original;
+          return (
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setDetailsId(e.id)}
+                className="h-9 px-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold flex items-center gap-1"
+              >
+                <Eye size={14} /> Details
+              </button>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
+
   return (
     <>
       {detailsId !== null && (
@@ -601,16 +713,20 @@ export default function AdminEnrollmentsPage() {
           }}
         />
       )}
-      <div className="min-h-screen bg-gray-50 p-3 sm:p-4 lg:p-5">
+      <div className="min-h-screen bg-gray-50 p-3 sm:p-4 lg:p-9">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
-          <div>
-            <h1 className="text-[18px] font-extrabold text-gray-900 tracking-tight">
-              Enrollments
-            </h1>
-            <p className="text-[11px] text-gray-400 mt-0.5 font-medium">
-              GET /enrollments · GET /enrollments/:id · POST
-              /enrollments/pay · POST /enrollments/manual
-            </p>
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
+              <BookOpen size={20} className="text-white" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-[17px] sm:text-[20px] font-extrabold text-gray-900 tracking-tight leading-none">
+                Enrollments
+              </h1>
+              <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5 font-medium truncate hidden sm:block">
+                Manage student enrollments, track payments, and add manual enrollments.
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -641,114 +757,28 @@ export default function AdminEnrollmentsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/70">
-                  {[
-                    "Student",
-                    "Course",
-                    "Amount",
-                    "Status",
-                    "Payment",
-                    "Created",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="text-left px-4 py-3 text-[11px] font-extrabold tracking-widest uppercase text-gray-500"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {list.isLoading ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center">
-                      <Loader2 className="h-5 w-5 animate-spin mx-auto" />
-                    </td>
-                  </tr>
-                ) : list.isError ? (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="px-4 py-12 text-center text-red-600"
-                    >
-                      Failed to load enrollments
-                    </td>
-                  </tr>
-                ) : enrollments.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="px-4 py-12 text-center text-gray-500"
-                    >
-                      No enrollments found
-                    </td>
-                  </tr>
-                ) : (
-                  enrollments.map((e) => (
-                    <tr
-                      key={String(e.id)}
-                      className="border-b border-gray-100 hover:bg-gray-50/50"
-                    >
-                      <td className="px-4 py-4">
-                        <p className="font-bold text-gray-900">{e.student}</p>
-                        <p className="text-[11px] text-gray-500">
-                          {e.studentEmail}
-                        </p>
-                        <p className="text-[11px] text-gray-400">ID: {e.id}</p>
-                      </td>
-                      <td className="px-4 py-4 font-medium text-gray-800">
-                        {e.course}
-                      </td>
-                      <td className="px-4 py-4 font-extrabold text-gray-900">
-                        ৳{e.amount}
-                      </td>
-                      <td className="px-4 py-4">
-                        <span
-                          className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold ${e.status === "completed" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}
-                        >
-                          {e.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="text-sm">
-                          <p className="font-semibold">{e.paymentMethod}</p>
-                          {e.transactionId && (
-                            <p className="text-[11px] text-gray-500">
-                              TRX: {e.transactionId}
-                            </p>
-                          )}
-                          {e.isManual && (
-                            <span className="text-[10px] text-purple-600 font-bold">
-                              MANUAL
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-[12px] text-gray-600">
-                        {e.createdAt}
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            onClick={() => setDetailsId(e.id)}
-                            className="h-9 px-3 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold flex items-center gap-1"
-                          >
-                            <Eye size={14} /> Details
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+        <div className="bg-white rounded-2xl mt-16 border border-gray-200 shadow-sm overflow-hidden">
+          {list.isLoading ? (
+            <div className="py-12 text-center">
+              <Loader2 className="h-5 w-5 animate-spin mx-auto text-indigo-500" />
+            </div>
+          ) : list.isError ? (
+            <div className="py-12 text-center text-red-600">
+              Failed to load enrollments
+            </div>
+          ) : enrollments.length === 0 ? (
+            <div className="py-12 text-center text-gray-500">
+              No enrollments found
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={enrollments}
+              showColumnsToggle={false}
+              showFooter={false}
+              pageSize={PAGE_SIZE}
+            />
+          )}
 
           <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
             <p className="text-sm text-gray-500 font-medium">
