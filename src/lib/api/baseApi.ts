@@ -80,6 +80,7 @@ export const baseApi = createApi({
     "Withdraw",
     "Shop",
     "Stats",
+    "Setting",
   ],
 
   endpoints: () => ({}),

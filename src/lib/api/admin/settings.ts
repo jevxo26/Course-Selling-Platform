@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "../baseApi";
 
 export type ApiSetting = {
   id: number;
@@ -8,31 +8,25 @@ export type ApiSetting = {
   updatedAt: string;
 };
 
-export const adminSettingsApi = createApi({
-  reducerPath: "adminSettingsApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://course-selling-platform-api-production.up.railway.app/settings",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ["Setting"],
+export const adminSettingsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getSettings: builder.query<ApiSetting[], void>({
-      query: () => "/",
+      query: () => ({
+        url: "/settings",
+        method: "GET",
+      }),
       providesTags: ["Setting"],
     }),
     getSettingByKey: builder.query<ApiSetting, string>({
-      query: (key) => `/${key}`,
+      query: (key) => ({
+        url: `/settings/${key}`,
+        method: "GET",
+      }),
       providesTags: (result, error, arg) => [{ type: "Setting", id: arg }],
     }),
     updateSetting: builder.mutation<ApiSetting, { key: string; value: string }>({
       query: (body) => ({
-        url: "/",
+        url: "/settings",
         method: "PUT",
         body,
       }),
@@ -40,12 +34,13 @@ export const adminSettingsApi = createApi({
     }),
     deleteSetting: builder.mutation<{ message: string }, string>({
       query: (key) => ({
-        url: `/${key}`,
+        url: `/settings/${key}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Setting"],
     }),
   }),
+  overrideExisting: false,
 });
 
 export const {
