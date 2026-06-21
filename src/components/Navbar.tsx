@@ -125,22 +125,23 @@ function Header() {
       ? "/affiliate/dashboard"
       : "/student/dashboard";
 
-  const handleLogout = async (closeCallback: () => void) => {
+  const handleLogout = (closeCallback: () => void) => {
     if (isLoggingOut) return;
     const toastId = toast.loading("Signing out...");
-    try {
-      await logoutApi().unwrap();
-    } catch {
-    } finally {
-      dispatch(logout());
-      dispatch(baseApi.util.resetApiState());
-      toast.success("Signed out successfully", { id: toastId });
-      closeCallback();
-      if (window.location.pathname === "/") {
-        window.location.reload();
-      } else {
-        window.location.href = "/";
-      }
+
+    // Fire API in background
+    logoutApi().catch(() => {});
+
+    // Instantly clear state and redirect
+    dispatch(logout());
+    dispatch(baseApi.util.resetApiState());
+    toast.success("Signed out successfully", { id: toastId });
+    closeCallback();
+
+    if (window.location.pathname === "/") {
+      window.location.reload();
+    } else {
+      window.location.href = "/";
     }
   };
 
