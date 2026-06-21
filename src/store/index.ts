@@ -4,6 +4,7 @@ import axios from "axios";
 import authReducer, { logout, setUser } from "./slices/authSlice";
 import { authApi } from "@/lib/api/authApi";
 import { baseApi } from "@/lib/api/baseApi";
+import { adminSettingsApi } from "@/lib/api/admin/settings";
 
 const AUTH_STORAGE_KEY = "course_platform_auth";
 
@@ -201,9 +202,10 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     [baseApi.reducerPath]: baseApi.reducer,
+    [adminSettingsApi.reducerPath]: adminSettingsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware, authFlowMiddleware),
+    getDefaultMiddleware().concat(baseApi.middleware, adminSettingsApi.middleware, authFlowMiddleware),
 });
 
 setupListeners(store.dispatch);

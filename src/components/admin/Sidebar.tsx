@@ -22,6 +22,7 @@ import {
   UserCircle,
   PieChart,
   BookOpen,
+  Settings,
 } from "lucide-react";
 import { LiaCloudShowersHeavySolid } from "react-icons/lia";
 import { useLogoutMutation } from "@/lib/api/authApi";
@@ -37,6 +38,7 @@ const navGroups = [
     icon: PieChart,
     items: [
       { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+      { label: "Settings", href: "/admin/settings", icon: Settings },
       { label: "Enrollments", href: "/admin/enrollments", icon: ClipboardList },
     ],
   },
