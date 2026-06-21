@@ -42,7 +42,8 @@ function Header() {
   const router = useRouter();
 
   const drawerRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
+  const desktopProfileRef = useRef<HTMLDivElement>(null);
+  const mobileProfileRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector(
@@ -72,12 +73,13 @@ function Header() {
       ) {
         setIsOpen(false);
       }
-      if (
-        profileOpen &&
-        profileRef.current &&
-        !profileRef.current.contains(e.target as Node)
-      ) {
-        setProfileOpen(false);
+      if (profileOpen) {
+        const clickedOutsideDesktop = desktopProfileRef.current && !desktopProfileRef.current.contains(e.target as Node);
+        const clickedOutsideMobile = mobileProfileRef.current && !mobileProfileRef.current.contains(e.target as Node);
+        
+        if (clickedOutsideDesktop && clickedOutsideMobile) {
+          setProfileOpen(false);
+        }
       }
     };
     document.addEventListener("mousedown", handleOutside);
@@ -129,19 +131,40 @@ function Header() {
     if (isLoggingOut) return;
     const toastId = toast.loading("Signing out...");
 
-    // Fire API in background
-    logoutApi().catch(() => {});
+    try {
+      // 1. Clear local storage explicitly to guarantee removal
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("course_platform_auth");
+        localStorage.removeItem("token");
+        localStorage.removeItem("access_token");
+        document.cookie = "role=; Path=/; Max-Age=0; SameSite=Lax";
+      }
 
-    // Instantly clear state and redirect
-    dispatch(logout());
-    dispatch(baseApi.util.resetApiState());
-    toast.success("Signed out successfully", { id: toastId });
-    closeCallback();
+      // 2. Clear Redux state
+      dispatch(logout());
+      try {
+        dispatch(baseApi.util.resetApiState());
+      } catch (e) {
+        // ignore
+      }
 
-    if (window.location.pathname === "/") {
-      window.location.reload();
-    } else {
-      window.location.href = "/";
+      // 3. Update UI
+      toast.success("Signed out successfully", { id: toastId });
+      closeCallback();
+
+      // 4. Redirect with a slight delay so toast is visible and state settles
+      setTimeout(() => {
+        if (window.location.pathname === "/") {
+          window.location.reload();
+        } else {
+          window.location.href = "/";
+        }
+      }, 300);
+
+      // 5. Fire API in background
+      logoutApi().catch(() => {});
+    } catch (error) {
+      toast.error("Logout failed", { id: toastId });
     }
   };
 
@@ -240,7 +263,7 @@ function Header() {
                   </Link>
 
                   {/* Profile dropdown */}
-                  <div className="relative" ref={profileRef}>
+                  <div className="relative" ref={desktopProfileRef}>
                     <button
                       type="button"
                       onClick={() => setProfileOpen((v) => !v)}
@@ -502,7 +525,7 @@ function Header() {
 
           {/* ── Profile tab (only when logged in) ── */}
           {isAuthenticated && (
-            <div className="relative flex-1" ref={profileRef}>
+            <div className="relative flex-1" ref={mobileProfileRef}>
               <button
                 type="button"
                 onClick={() => setProfileOpen((v) => !v)}
