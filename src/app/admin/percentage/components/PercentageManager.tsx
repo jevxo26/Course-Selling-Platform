@@ -26,6 +26,7 @@ import {
   useAdminPercentagesQuery,
   useAdminUpdatePercentageMutation,
 } from "@/lib/api/admin/percentage";
+import { toast } from "sonner";
 
 type ApiPercentage = {
   id: number;
@@ -961,8 +962,14 @@ export default function PercentageManager() {
           loading={deleteState.isLoading}
           onClose={closeModal}
           onConfirm={async () => {
-            await deletePercentage(modal.item.id).unwrap();
-            closeModal();
+            try {
+              await deletePercentage(modal.item.id).unwrap();
+              toast.success("Percentage deleted successfully");
+            } catch (err: any) {
+              toast.error(err?.data?.message || "Failed to delete percentage");
+            } finally {
+              setModal({ type: "none" });
+            }
           }}
         />
       )}

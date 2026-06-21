@@ -19,6 +19,7 @@ import { ConfirmModal } from "./ConfirmModal";
 import { DetailsModal } from "./DetailsModal";
 import { CategoryTable } from "./CategoryTable";
 import { Pagination } from "./Pagination";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
 
@@ -142,8 +143,14 @@ export default function CategoryManager(): React.JSX.Element {
           loading={busy}
           onClose={() => setRemove(null)}
           onConfirm={async () => {
-            await deleteCategory(remove.id).unwrap();
-            setRemove(null);
+            try {
+              await deleteCategory(remove.id).unwrap();
+              toast.success("Category deleted successfully");
+            } catch (err: any) {
+              toast.error(err?.data?.message || "Failed to delete category");
+            } finally {
+              setRemove(null);
+            }
           }}
         />
       )}

@@ -23,6 +23,7 @@ import ViewModal from "./components/ViewModal";
 import AdminCoursesToolbar from "./components/AdminCoursesToolbar";
 import AdminCoursesStats from "./components/AdminCoursesStats";
 import AdminCourseTable from "./components/AdminCourseTable";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
 
@@ -156,8 +157,14 @@ export default function AdminCoursesPage(): React.JSX.Element {
           loading={isDeleting}
           onClose={() => setDeleteTarget(null)}
           onConfirm={async () => {
-            await deleteCourse(deleteTarget.id).unwrap();
-            setDeleteTarget(null);
+            try {
+              await deleteCourse(deleteTarget.id).unwrap();
+              toast.success("Course deleted successfully");
+            } catch (err: any) {
+              toast.error(err?.data?.message || "Failed to delete course");
+            } finally {
+              setDeleteTarget(null);
+            }
           }}
         />
       )}

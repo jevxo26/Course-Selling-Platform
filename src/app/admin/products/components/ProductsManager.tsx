@@ -205,11 +205,50 @@ const inputCls =
 /* ─── Create Product Modal (unchanged) ─── */
 // ... (kept as is, not shown for brevity)
 
-/* ─── ConfirmModal (unchanged) ─── */
-// ... (kept as is)
-
-/* ─── PaymentConfirmModal (unchanged) ─── */
-// ... (kept as is)
+function ConfirmModal({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  isLoading,
+}: {
+  isOpen: boolean;
+  title: string;
+  message: React.ReactNode;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isLoading?: boolean;
+}) {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden flex flex-col">
+        <div className="p-5 flex flex-col gap-2">
+          <h3 className="text-lg font-black text-slate-900">{title}</h3>
+          <p className="text-sm text-slate-600 font-medium">{message}</p>
+        </div>
+        <div className="p-4 bg-slate-50 flex items-center justify-end gap-2 border-t border-slate-100">
+          <button
+            onClick={onCancel}
+            disabled={isLoading}
+            className="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="px-4 py-2 rounded-xl text-sm font-bold text-white transition-colors flex items-center gap-2 bg-red-500 hover:bg-red-600"
+          >
+            {isLoading && <Loader2 size={14} className="animate-spin" />}
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ════════════════════════════════════════════
    MAIN LIST PAGE – now fully responsive
@@ -296,9 +335,26 @@ export default function ProductsManager(): React.JSX.Element {
 
   return (
     <>
-      {/* Modals (unchanged) */}
-      {/* ... */}
-
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Delete Product"
+        message={
+          <>
+            Are you sure you want to delete <strong>{deleteTarget?.title}</strong>? This action cannot be undone.
+          </>
+        }
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          if (!deleteTarget) return;
+          try {
+            await remove(deleteTarget.id).unwrap();
+            setDeleteTarget(null);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        isLoading={isDeleting}
+      />
       <div className="min-h-screen bg-white p-4 lg:p-6">
         {/* ── Header (responsive) ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
