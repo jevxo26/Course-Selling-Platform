@@ -11,7 +11,7 @@ export type ApiSetting = {
 export const adminSettingsApi = createApi({
   reducerPath: "adminSettingsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/settings`,
+    baseUrl: "https://course-selling-platform-api-production.up.railway.app/settings",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
