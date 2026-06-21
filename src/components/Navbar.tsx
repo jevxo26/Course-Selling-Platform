@@ -136,7 +136,11 @@ function Header() {
       dispatch(baseApi.util.resetApiState());
       toast.success("Signed out successfully", { id: toastId });
       closeCallback();
-      window.location.href = "/";
+      if (window.location.pathname === "/") {
+        window.location.reload();
+      } else {
+        window.location.href = "/";
+      }
     }
   };
 

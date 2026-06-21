@@ -118,7 +118,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       dispatch(baseApi.util.resetApiState());
       toast.success("Signed out", { id: toastId });
       onClose?.();
-      window.location.href = "/";
+      router.replace("/");
     }
   };
 
@@ -231,10 +231,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                       className={`
                         group relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 no-underline
                         transition-all duration-[180ms] ease-[cubic-bezier(.4,0,.2,1)]
-                        ${
-                          isActive
-                            ? "bg-blue-50 text-slate-800 shadow-sm"
-                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                        ${isActive
+                          ? "bg-blue-50 text-slate-800 shadow-sm"
+                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
                         }
                       `}
                     >
@@ -248,10 +247,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                         className={`
                           flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-lg
                           transition-all duration-[180ms]
-                          ${
-                            isActive
-                              ? "bg-blue-100 text-[#4f8ef7] scale-105"
-                              : "bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#4f8ef7] group-hover:scale-105"
+                          ${isActive
+                            ? "bg-blue-100 text-[#4f8ef7] scale-105"
+                            : "bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#4f8ef7] group-hover:scale-105"
                           }
                         `}
                       >
@@ -260,9 +258,8 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
 
                       {/* Label */}
                       <span
-                        className={`text-[12px] leading-none ${
-                          isActive ? "font-semibold" : "font-medium"
-                        }`}
+                        className={`text-[12px] leading-none ${isActive ? "font-semibold" : "font-medium"
+                          }`}
                       >
                         {item.label}
                       </span>
@@ -272,10 +269,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                         size={11}
                         className={`
                           ml-auto text-[#4f8ef7] transition-all duration-[180ms]
-                          ${
-                            isActive || hoveredHref === item.href
-                              ? "translate-x-0 opacity-100"
-                              : "-translate-x-1 opacity-0"
+                          ${isActive || hoveredHref === item.href
+                            ? "translate-x-0 opacity-100"
+                            : "-translate-x-1 opacity-0"
                           }
                         `}
                       />

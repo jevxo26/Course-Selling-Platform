@@ -187,7 +187,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
               dispatch(baseApi.util.resetApiState());
               toast.success("Signed out", { id: toastId });
               onClose?.();
-              window.location.href = "/";
+              window.location.href = "/login";
             }
           }}
           disabled={isLoggingOut}
