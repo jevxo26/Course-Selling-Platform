@@ -14,6 +14,7 @@ import {
   X,
   UserRound,
   ChevronRight,
+  ShoppingBag,
 } from "lucide-react";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { HiOutlineUsers } from "react-icons/hi2";
@@ -43,6 +44,7 @@ const navGroups = [
     items: [
       { label: "My Courses", href: "/student/courses", icon: GraduationCap },
       { label: "Products", href: "/student/products", icon: Package },
+      { label: "My Shops", href: "/student/my-shops", icon: ShoppingBag },
     ],
   },
   {
