@@ -15,6 +15,7 @@ export const adminSettingsApi = baseApi.injectEndpoints({
         url: "/settings",
         method: "GET",
       }),
+      transformResponse: (response: any) => response.data ?? response,
       providesTags: ["Setting"],
     }),
     getSettingByKey: builder.query<ApiSetting, string>({
@@ -22,6 +23,7 @@ export const adminSettingsApi = baseApi.injectEndpoints({
         url: `/settings/${key}`,
         method: "GET",
       }),
+      transformResponse: (response: any) => response.data ?? response,
       providesTags: (result, error, arg) => [{ type: "Setting", id: arg }],
     }),
     updateSetting: builder.mutation<ApiSetting, { key: string; value: string }>({
@@ -30,6 +32,7 @@ export const adminSettingsApi = baseApi.injectEndpoints({
         method: "PUT",
         body,
       }),
+      transformResponse: (response: any) => response.data ?? response,
       invalidatesTags: ["Setting"],
     }),
     deleteSetting: builder.mutation<{ message: string }, string>({
