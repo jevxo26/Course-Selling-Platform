@@ -115,7 +115,7 @@ export default function TopNavbar({
       toast.success("Signed out", { id: toastId });
       setDropdownOpen(false);
       onClose?.();
-      router.replace("/");
+      window.location.href = "/";
     }
   };
 

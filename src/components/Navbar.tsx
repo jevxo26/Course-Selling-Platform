@@ -134,9 +134,9 @@ function Header() {
     } finally {
       dispatch(logout());
       dispatch(baseApi.util.resetApiState());
-      toast.success("Signed out", { id: toastId });
+      toast.success("Signed out successfully", { id: toastId });
       closeCallback();
-      router.replace("/");
+      window.location.href = "/";
     }
   };
 
