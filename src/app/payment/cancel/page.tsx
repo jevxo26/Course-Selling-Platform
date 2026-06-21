@@ -2,7 +2,14 @@ import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-export default function PaymentCancelPage() {
+export default function PaymentCancelPage({
+  searchParams,
+}: {
+  searchParams: { type?: string };
+}) {
+  const isShop = searchParams?.type === 'shop';
+  const retryUrl = isShop ? '/student/my-shops' : '/courses';
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-950">
       <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl text-center space-y-6 border border-gray-100 dark:border-gray-800">
@@ -18,7 +25,7 @@ export default function PaymentCancelPage() {
           </p>
         </div>
         <div className="pt-4 flex flex-col space-y-3">
-          <Link href="/courses" className="block w-full">
+          <Link href={retryUrl} className="block w-full">
             <Button size="lg" className="w-full">
               Try Again
             </Button>
