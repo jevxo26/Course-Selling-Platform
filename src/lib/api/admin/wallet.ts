@@ -21,6 +21,13 @@ export const adminWalletApi = baseApi.injectEndpoints({
       },
       providesTags: ["Wallet" as any],
     }),
+    adminDeleteWallet: build.mutation<{ message: string }, number | string>({
+      query: (id) => ({
+        url: `/wallet/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wallet" as any],
+    }),
   }),
   overrideExisting: false,
 });
@@ -28,4 +35,5 @@ export const adminWalletApi = baseApi.injectEndpoints({
 export const {
   useAdminWalletsQuery,
   useLazyAdminWalletsQuery,
+  useAdminDeleteWalletMutation,
 } = adminWalletApi;
