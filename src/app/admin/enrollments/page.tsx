@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   AlertTriangle,
   Check,
@@ -17,12 +18,14 @@ import {
   CreditCard,
   Hash,
   Activity,
+  Trash2,
 } from "lucide-react";
 import {
   useAdminEnrollmentsManualPaymentMutation,
   useAdminEnrollmentsPayZinipayPaymentMutation,
   useAdminEnrollmentsQuery,
   useLazyAdminEnrollmentQuery,
+  useAdminDeleteEnrollmentMutation,
 } from "@/lib/api/admin/enrollments";
 import { useAdminCoursesQuery } from "@/lib/api/admin/course";
 import { useAdminUsersQuery } from "@/lib/api/admin/user";
@@ -536,10 +539,23 @@ export default function AdminEnrollmentsPage() {
   const [manualBody, setManualBody] = useState<
     { courseId: number | string | null; studentId: number | string | null } | null
   >(null);
+  const [deleteId, setDeleteId] = useState<number | string | null>(null);
   const [payZinipay, { isLoading: isPayingZinipay }] =
     useAdminEnrollmentsPayZinipayPaymentMutation();
   const [manualPayment, { isLoading: isManualPaying }] =
     useAdminEnrollmentsManualPaymentMutation();
+  const [deleteEnrollment, { isLoading: isDeleting }] = useAdminDeleteEnrollmentMutation();
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await deleteEnrollment(deleteId).unwrap();
+      toast.success("Enrollment deleted successfully");
+      setDeleteId(null);
+    } catch (e: any) {
+      toast.error(e?.data?.message || "Failed to delete enrollment");
+    }
+  };
 
   const columns = useMemo<ColumnDef<UiEnrollment, unknown>[]>(
     () => [
@@ -640,6 +656,12 @@ export default function AdminEnrollmentsPage() {
               >
                 <Eye size={14} /> Details
               </button>
+              <button
+                onClick={() => setDeleteId(e.id)}
+                className="h-9 px-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold flex items-center gap-1"
+              >
+                <Trash2 size={14} /> Delete
+              </button>
             </div>
           );
         },
@@ -652,6 +674,31 @@ export default function AdminEnrollmentsPage() {
     <>
       {detailsId !== null && (
         <DetailsModal id={detailsId} open onClose={() => setDetailsId(null)} />
+      )}
+      {deleteId !== null && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Enrollment</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Are you sure you want to delete this enrollment? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setDeleteId(null)}
+                className="px-4 py-2 rounded-xl text-gray-600 font-bold hover:bg-gray-50 text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 text-sm flex items-center gap-2"
+              >
+                {isDeleting ? <Loader2 size={16} className="animate-spin" /> : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
       {zinipayBody !== null && (
         <JsonBodyModal

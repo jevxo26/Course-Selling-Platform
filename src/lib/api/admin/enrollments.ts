@@ -57,6 +57,13 @@ export const adminEnrollmentsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Enrollment"],
     }),
+    adminDeleteEnrollment: build.mutation<{ message: string }, number | string>({
+      query: (id) => ({
+        url: `/enrollments/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Enrollment"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -68,4 +75,5 @@ export const {
   useLazyAdminEnrollmentQuery,
   useAdminEnrollmentsPayZinipayPaymentMutation,
   useAdminEnrollmentsManualPaymentMutation,
+  useAdminDeleteEnrollmentMutation,
 } = adminEnrollmentsApi;
