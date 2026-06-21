@@ -62,6 +62,26 @@ const nextConfig = {
         protocol: "https",
         hostname: "ui-avatars.com",
       },
+      {
+        protocol: "https",
+        hostname: "course-selling-platform-api-production.up.railway.app",
+      },
+      {
+        protocol: "http",
+        hostname: "course-selling-platform-api-production.up.railway.app",
+      },
+      {
+        protocol: "https",
+        hostname: "course-selling-api.up.railway.app",
+      },
+      {
+        protocol: "https",
+        hostname: "api.maruftech.online",
+      },
+      {
+        protocol: "http",
+        hostname: "api.maruftech.online",
+      },
     ],
   },
 

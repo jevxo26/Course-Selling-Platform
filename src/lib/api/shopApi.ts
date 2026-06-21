@@ -63,7 +63,11 @@ export const shopApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: any) => response.data ?? response,
     }),
+    getShopPurchaseDetails: builder.query<any, number>({
+      query: (id) => `/shop-purchases/my/${id}`,
+      transformResponse: (response: any) => response.data ?? response,
+    }),
   }),
 });
 
-export const { useGetShopItemsQuery, useCreateShopItemMutation, useDeleteShopItemMutation, useBuyShopItemMutation } = shopApi;
+export const { useGetShopItemsQuery, useCreateShopItemMutation, useDeleteShopItemMutation, useBuyShopItemMutation, useGetShopPurchaseDetailsQuery } = shopApi;

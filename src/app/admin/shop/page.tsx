@@ -41,9 +41,16 @@ export default function AdminShopPage() {
     gmail: "",
     password: "",
     price: "",
+    type: "instant",
+    whatsapp: "",
+    telegram: "",
+    description: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] || null;
@@ -58,15 +65,20 @@ export default function AdminShopPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.gmail || !formData.password) {
-      return toast.error("Name, Gmail, and Password are required");
+    if (!formData.name) {
+      return toast.error("Name is required");
     }
     const payload = new FormData();
     payload.append("name", formData.name);
-    payload.append("gmail", formData.gmail);
-    payload.append("password", formData.password);
+    if (formData.gmail) payload.append("gmail", formData.gmail);
+    if (formData.password) payload.append("password", formData.password);
     if (formData.price) payload.append("price", formData.price);
     if (file) payload.append("logo", file);
+    
+    payload.append("type", formData.type);
+    if (formData.whatsapp) payload.append("whatsapp", formData.whatsapp);
+    if (formData.telegram) payload.append("telegram", formData.telegram);
+    if (formData.description) payload.append("description", formData.description);
     try {
       await createItem(payload).unwrap();
       toast.success("Shop item created successfully");
@@ -77,23 +89,30 @@ export default function AdminShopPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
-    setDeletingId(id);
+  const confirmDelete = async () => {
+    if (itemToDelete === null) return;
+    setDeletingId(itemToDelete);
     try {
-      await deleteItem(id).unwrap();
+      await deleteItem(itemToDelete).unwrap();
       toast.success("Item deleted successfully");
       refetch();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to delete item");
     } finally {
       setDeletingId(null);
+      setDeleteModalOpen(false);
+      setItemToDelete(null);
     }
+  };
+
+  const openDeleteModal = (id: number) => {
+    setItemToDelete(id);
+    setDeleteModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setFormData({ name: "", gmail: "", password: "", price: "" });
+    setFormData({ name: "", gmail: "", password: "", price: "", type: "instant", whatsapp: "", telegram: "", description: "" });
     setFile(null);
     setPreviewUrl(null);
   };
@@ -305,7 +324,7 @@ export default function AdminShopPage() {
                         {/* Actions */}
                         <td className="px-5 py-3.5 text-right">
                           <button
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => openDeleteModal(item.id)}
                             disabled={deletingId === item.id}
                             className="w-8 h-8 rounded-lg border border-red-200 bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50 ml-auto"
                           >
@@ -367,7 +386,7 @@ export default function AdminShopPage() {
 
                     {/* Delete */}
                     <button
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => openDeleteModal(item.id)}
                       disabled={deletingId === item.id}
                       className="w-9 h-9 rounded-xl border border-red-200 bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50 shrink-0"
                     >
@@ -496,15 +515,45 @@ export default function AdminShopPage() {
                 />
               </div>
 
+              {/* Type Selection */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                  Product Type <span className="text-red-400">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, type: "instant" })}
+                    className={`py-3 rounded-xl border-2 text-[13px] font-bold transition-all ${
+                      formData.type === "instant"
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-500 hover:border-blue-300"
+                    }`}
+                  >
+                    Instant Delivery
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, type: "manual" })}
+                    className={`py-3 rounded-xl border-2 text-[13px] font-bold transition-all ${
+                      formData.type === "manual"
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-500 hover:border-blue-300"
+                    }`}
+                  >
+                    Manual Delivery
+                  </button>
+                </div>
+              </div>
+
               {/* Gmail */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <Mail size={11} className="text-slate-400" />
-                  Gmail <span className="text-red-400">*</span>
+                  Gmail <span className="text-slate-400 normal-case font-normal">(optional)</span>
                 </label>
                 <input
                   type="email"
-                  required
                   value={formData.gmail}
                   onChange={(e) =>
                     setFormData({ ...formData, gmail: e.target.value })
@@ -518,14 +567,10 @@ export default function AdminShopPage() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <KeyRound size={11} className="text-slate-400" />
-                  Password <span className="text-red-400">*</span>
-                  <span className="text-slate-400 normal-case font-normal ml-1">
-                    (min 6 chars)
-                  </span>
+                  Password <span className="text-slate-400 normal-case font-normal">(optional, min 6 chars)</span>
                 </label>
                 <input
                   type="password"
-                  required
                   minLength={6}
                   value={formData.password}
                   onChange={(e) =>
@@ -533,6 +578,56 @@ export default function AdminShopPage() {
                   }
                   placeholder="Secret access key"
                   className="w-full px-3.5 py-3 text-[13px] font-semibold border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                />
+              </div>
+
+              {/* Conditional Manual Inputs */}
+              {formData.type === "manual" && (
+                <div className="grid grid-cols-2 gap-3 p-4 bg-orange-50 border border-orange-100 rounded-2xl">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[11px] font-bold text-orange-800 uppercase tracking-wider">
+                      WhatsApp Number
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.whatsapp}
+                      onChange={(e) =>
+                        setFormData({ ...formData, whatsapp: e.target.value })
+                      }
+                      placeholder="+8801..."
+                      className="w-full px-3 py-2.5 text-[13px] font-semibold border border-orange-200 rounded-xl bg-white text-slate-800 placeholder:text-slate-300 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[11px] font-bold text-orange-800 uppercase tracking-wider">
+                      Telegram Username
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.telegram}
+                      onChange={(e) =>
+                        setFormData({ ...formData, telegram: e.target.value })
+                      }
+                      placeholder="@username"
+                      className="w-full px-3 py-2.5 text-[13px] font-semibold border border-orange-200 rounded-xl bg-white text-slate-800 placeholder:text-slate-300 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                  Description <span className="text-slate-400 normal-case font-normal">(optional)</span>
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Details about this product..."
+                  rows={3}
+                  className="w-full px-3.5 py-3 text-[13px] font-semibold border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none"
                 />
               </div>
 
@@ -581,6 +676,49 @@ export default function AdminShopPage() {
                   <Plus size={14} />
                 )}
                 Create Product
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DELETE CONFIRMATION MODAL ═══ */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => !deletingId && setDeleteModalOpen(false)}
+          />
+          <div className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col scale-100 animate-in zoom-in-95 duration-200">
+            <div className="p-5 flex flex-col gap-3">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2">
+                <Trash2 size={24} className="text-red-600" />
+              </div>
+              <h3 className="text-[18px] font-black text-slate-900 text-center">
+                Delete Product?
+              </h3>
+              <p className="text-[13px] text-slate-500 font-medium text-center leading-relaxed">
+                Are you sure you want to delete this product? This action cannot be undone and will permanently remove the item from your shop.
+              </p>
+            </div>
+            <div className="p-4 bg-slate-50 flex flex-col-reverse sm:flex-row items-center gap-2 border-t border-slate-100">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                disabled={deletingId !== null}
+                className="w-full sm:w-1/2 py-3.5 rounded-xl text-[13px] font-bold text-slate-600 hover:bg-slate-200 active:bg-slate-300 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deletingId !== null}
+                className="w-full sm:w-1/2 py-3.5 rounded-xl text-[13px] font-bold text-white bg-red-500 hover:bg-red-600 active:bg-red-700 flex items-center justify-center gap-2 shadow-lg shadow-red-200 transition-all disabled:opacity-50"
+              >
+                {deletingId !== null ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  "Delete Now"
+                )}
               </button>
             </div>
           </div>

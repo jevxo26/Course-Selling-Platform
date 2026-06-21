@@ -202,8 +202,104 @@ function Field({
 const inputCls =
   "w-full px-3 py-2.5 text-[12px] font-semibold border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all";
 
-/* ─── Create Product Modal (unchanged) ─── */
-// ... (kept as is, not shown for brevity)
+/* ─── Create Product Modal ─── */
+function CreateProductModal({
+  isOpen,
+  onClose,
+  createProduct,
+  isCreating,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  createProduct: any;
+  isCreating: boolean;
+}) {
+  const [formData, setFormData] = useState({ botName: "", country: "", amount: "" });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createProduct({
+        botName: formData.botName,
+        countryCodes: formData.country.split(",").map((c) => c.trim()).filter(Boolean),
+        totalAmount: Number(formData.amount) || 0,
+      }).unwrap();
+      setFormData({ botName: "", country: "", amount: "" });
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit product");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col">
+        <div className="p-5 flex items-center justify-between border-b border-slate-100">
+          <h3 className="text-lg font-black text-slate-900">Create Product</h3>
+          <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-lg text-slate-500">
+            <X size={18} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-4">
+          <Field label="Bot Name" required>
+            <input
+              required
+              value={formData.botName}
+              onChange={(e) => setFormData({ ...formData, botName: e.target.value })}
+              className={inputCls}
+              placeholder="e.g. TradeBot Pro"
+            />
+          </Field>
+          <Field label="Country Codes" required hint="Separate multiple countries with commas">
+            <input
+              required
+              value={formData.country}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              className={inputCls}
+              placeholder="e.g. US, UK, BD"
+            />
+          </Field>
+          <Field label="Amount" required>
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-slate-500 font-bold">৳</span>
+              <input
+                required
+                type="number"
+                step="0.01"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                className={`${inputCls} pl-8`}
+                placeholder="49.99"
+              />
+            </div>
+          </Field>
+          <div className="mt-2 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isCreating}
+              className="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isCreating}
+              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-violet-600 hover:bg-violet-700 flex items-center gap-2"
+            >
+              {isCreating && <Loader2 size={14} className="animate-spin" />}
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 function ConfirmModal({
   isOpen,
@@ -354,6 +450,12 @@ export default function ProductsManager(): React.JSX.Element {
           }
         }}
         isLoading={isDeleting}
+      />
+      <CreateProductModal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        createProduct={createProduct}
+        isCreating={isCreating}
       />
       <div className="min-h-screen bg-white p-4 lg:p-6">
         {/* ── Header (responsive) ── */}
