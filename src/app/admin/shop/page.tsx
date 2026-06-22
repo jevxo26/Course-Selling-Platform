@@ -111,7 +111,7 @@ export default function AdminShopPage() {
       closeModal();
       refetch();
     } catch (err: any) {
-      toast.error(err?.data?.message || \`Failed to \${editItemId ? "update" : "create"} shop item\`);
+      toast.error(err?.data?.message || `Failed to ${editItemId ? "update" : "create"} shop item`);
     }
   };
 
