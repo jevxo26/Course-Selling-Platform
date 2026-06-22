@@ -88,7 +88,8 @@ const nextConfig = {
   async rewrites() {
     const apiBase =
       process.env.NEXT_PUBLIC_API_BASE_URL ??
-      "https://course-selling-api.up.railway.app";
+      "https://course-selling-platform-api-production.up.railway.app";
+
 
     const normalizedApiBase = apiBase.replace(/\/$/, "");
 
