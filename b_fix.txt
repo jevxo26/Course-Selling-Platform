@@ -1,2 +1,0 @@
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://course-selling-platform-api-production.up.railway.app",
