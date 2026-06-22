@@ -1,3 +1,8 @@
+#!/bin/bash
+# First add the import
+sed -i '' 's/import Image from "next\/image";/import Image from "next\/image";\nimport { uploadImageToImgBB } from "@\/lib\/images.upload";/' /Users/macbookair/Desktop/Nexo-Prodcuts/CSW/Course-Selling-Platform/src/app/admin/shop/page.tsx
+
+cat << 'INNER_EOF' > shop_submit.txt
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name) {
@@ -46,3 +51,8 @@
       toast.error(err?.data?.message || \`Failed to \${editItemId ? "update" : "create"} shop item\`);
     }
   };
+INNER_EOF
+
+# Replace handleSubmit
+perl -0777 -pi -e 's/  const handleSubmit = async.*?  };\n/`cat shop_submit.txt`/se' /Users/macbookair/Desktop/Nexo-Prodcuts/CSW/Course-Selling-Platform/src/app/admin/shop/page.tsx
+

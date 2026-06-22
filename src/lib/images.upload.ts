@@ -11,7 +11,7 @@ type ImgBBUploadApiResponse = {
 };
 
 export async function uploadImageToImgBB(file: File | Blob): Promise<string> {
-  const apiKey = "a6c948ab64f7987bbf9e5477cde3a1cb";
+  const apiKey = "76ffca68cd9c73caf76e6515c27a27b5";
 
   if (!apiKey) {
     throw new Error(

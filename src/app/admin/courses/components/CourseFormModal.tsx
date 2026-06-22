@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Check, Loader2, Link as LinkIcon, User, ShieldCheck } from "lucide-react";
 import { UiCourse } from "./types";
 import ModalShell from "./ModalShell";
-import { uploadImageToBackend } from "@/lib/images.upload";
+import { uploadImageToImgBB } from "@/lib/images.upload";
 
 type Props = {
   initial?: UiCourse | null;
@@ -83,7 +83,7 @@ export default function CourseFormModal({
     if (thumbnailFile) {
       setUploadingImg(true);
       try {
-        finalThumbnail = await uploadImageToBackend(thumbnailFile);
+        finalThumbnail = await uploadImageToImgBB(thumbnailFile);
       } catch (err) {
         alert("Image upload failed. Please try again.");
         setUploadingImg(false);

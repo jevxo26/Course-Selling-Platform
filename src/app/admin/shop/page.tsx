@@ -22,6 +22,7 @@ import {
   Upload,
 } from "lucide-react";
 import Image from "next/image";
+import { uploadImageToImgBB } from "@/lib/images.upload";
 
 export default function AdminShopPage() {
   const {
@@ -70,12 +71,30 @@ export default function AdminShopPage() {
     if (!formData.name) {
       return toast.error("Name is required");
     }
+    
+    // First, upload to ImgBB if there's a new file
+    let finalLogoUrl: string | null = null;
+    if (file) {
+      const loadingToastId = toast.loading("Uploading image...");
+      try {
+        finalLogoUrl = await uploadImageToImgBB(file);
+        toast.dismiss(loadingToastId);
+      } catch (err) {
+        toast.dismiss(loadingToastId);
+        return toast.error("Image upload failed! Please try again.");
+      }
+    }
+
     const payload = new FormData();
     payload.append("name", formData.name);
     if (formData.gmail) payload.append("gmail", formData.gmail);
     if (formData.password) payload.append("password", formData.password);
     if (formData.price) payload.append("price", formData.price);
-    if (file) payload.append("logo", file);
+    
+    // If a new file was uploaded, use the ImgBB URL. Else if it's an edit, the backend will keep the old one or we just don't pass logo
+    if (finalLogoUrl) {
+      payload.append("logo", finalLogoUrl);
+    }
     
     payload.append("type", formData.type);
     if (formData.whatsapp) payload.append("whatsapp", formData.whatsapp);
