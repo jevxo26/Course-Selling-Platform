@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import {
   useGetShopItemsQuery,
   useCreateShopItemMutation,
-  useDeleteShopItemMutation,
+  useUpdateShopItemMutation, useDeleteShopItemMutation,
 } from "@/lib/api/shopApi";
 import { toast } from "sonner";
 import {
   Plus,
-  Trash2,
+  Trash2, Edit,
   Image as ImageIcon,
   Loader2,
   ShoppingBag,
@@ -30,6 +30,8 @@ export default function AdminShopPage() {
     refetch,
   } = useGetShopItemsQuery({ page: 1, limit: 100 });
   const [createItem, { isLoading: isCreating }] = useCreateShopItemMutation();
+  const [updateItem, { isLoading: isUpdating }] = useUpdateShopItemMutation();
+  const [editItemId, setEditItemId] = useState<number | null>(null);
   const [deleteItem, { isLoading: isDeleting }] = useDeleteShopItemMutation();
 
   const shopItems: any[] = shopData?.items || [];
@@ -80,13 +82,34 @@ export default function AdminShopPage() {
     if (formData.telegram) payload.append("telegram", formData.telegram);
     if (formData.description) payload.append("description", formData.description);
     try {
-      await createItem(payload).unwrap();
-      toast.success("Shop item created successfully");
+      if (editItemId) {
+        await updateItem({ id: editItemId, data: payload }).unwrap();
+        toast.success("Shop item updated successfully");
+      } else {
+        await createItem(payload).unwrap();
+        toast.success("Shop item created successfully");
+      }
       closeModal();
       refetch();
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to create shop item");
+      toast.error(err?.data?.message || \`Failed to \${editItemId ? "update" : "create"} shop item\`);
     }
+  };
+
+  const openEditModal = (item: any) => {
+    setFormData({
+      name: item.name || "",
+      gmail: item.gmail || "",
+      password: item.password || "",
+      price: item.price || "",
+      type: item.type || "instant",
+      whatsapp: item.whatsapp || "",
+      telegram: item.telegram || "",
+      description: item.description || "",
+    });
+    setPreviewUrl(item.logo || null);
+    setEditItemId(item.id);
+    setIsModalOpen(true);
   };
 
   const confirmDelete = async () => {
@@ -115,6 +138,7 @@ export default function AdminShopPage() {
     setFormData({ name: "", gmail: "", password: "", price: "", type: "instant", whatsapp: "", telegram: "", description: "" });
     setFile(null);
     setPreviewUrl(null);
+    setEditItemId(null);
   };
 
   const totalRevenue = shopItems.reduce(
@@ -324,6 +348,12 @@ export default function AdminShopPage() {
                         {/* Actions */}
                         <td className="px-5 py-3.5 text-right">
                           <button
+                            onClick={() => openEditModal(item)}
+                            className="w-8 h-8 rounded-lg border border-indigo-200 bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 active:bg-indigo-200 transition-colors mr-2 inline-flex"
+                          >
+                            <Edit size={14} />
+                          </button>
+                          <button
                             onClick={() => openDeleteModal(item.id)}
                             disabled={deletingId === item.id}
                             className="w-8 h-8 rounded-lg border border-red-200 bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50 ml-auto"
@@ -384,6 +414,12 @@ export default function AdminShopPage() {
                       </p>
                     </div>
 
+                    <button
+                      onClick={() => openEditModal(item)}
+                      className="w-9 h-9 rounded-xl border border-indigo-200 bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 active:bg-indigo-200 transition-colors mr-2"
+                    >
+                      <Edit size={15} />
+                    </button>
                     {/* Delete */}
                     <button
                       onClick={() => openDeleteModal(item.id)}
@@ -443,7 +479,7 @@ export default function AdminShopPage() {
               </div>
               <button
                 onClick={closeModal}
-                disabled={isCreating}
+                disabled={isCreating || isUpdating}
                 className="w-9 h-9 rounded-2xl flex items-center justify-center text-white/70 hover:bg-white/20 active:bg-white/30 transition-all disabled:opacity-60"
               >
                 <X size={15} />
@@ -660,14 +696,14 @@ export default function AdminShopPage() {
             <div className="px-5 py-4 sm:py-5 border-t border-slate-100 bg-slate-50/80 flex gap-3 flex-shrink-0 safe-bottom">
               <button
                 onClick={closeModal}
-                disabled={isCreating}
+                disabled={isCreating || isUpdating}
                 className="flex-1 py-3.5 rounded-2xl border-2 border-slate-200 text-[13px] font-bold text-slate-500 hover:bg-white hover:border-slate-300 active:bg-slate-50 transition-all disabled:opacity-60"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={isCreating}
+                disabled={isCreating || isUpdating}
                 className="flex-1 py-3.5 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white text-[13px] font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200 transition-all disabled:opacity-60"
               >
                 {isCreating ? (

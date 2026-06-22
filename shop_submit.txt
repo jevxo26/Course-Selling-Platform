@@ -1,0 +1,46 @@
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name) {
+      return toast.error("Name is required");
+    }
+    const payload = new FormData();
+    payload.append("name", formData.name);
+    if (formData.gmail) payload.append("gmail", formData.gmail);
+    if (formData.password) payload.append("password", formData.password);
+    if (formData.price) payload.append("price", formData.price);
+    if (file) payload.append("logo", file);
+    
+    payload.append("type", formData.type);
+    if (formData.whatsapp) payload.append("whatsapp", formData.whatsapp);
+    if (formData.telegram) payload.append("telegram", formData.telegram);
+    if (formData.description) payload.append("description", formData.description);
+    try {
+      if (editItemId) {
+        await updateItem({ id: editItemId, data: payload }).unwrap();
+        toast.success("Shop item updated successfully");
+      } else {
+        await createItem(payload).unwrap();
+        toast.success("Shop item created successfully");
+      }
+      closeModal();
+      refetch();
+    } catch (err: any) {
+      toast.error(err?.data?.message || \`Failed to \${editItemId ? "update" : "create"} shop item\`);
+    }
+  };
+
+  const openEditModal = (item: any) => {
+    setFormData({
+      name: item.name || "",
+      gmail: item.gmail || "",
+      password: item.password || "",
+      price: item.price || "",
+      type: item.type || "instant",
+      whatsapp: item.whatsapp || "",
+      telegram: item.telegram || "",
+      description: item.description || "",
+    });
+    setPreviewUrl(item.logo || null);
+    setEditItemId(item.id);
+    setIsModalOpen(true);
+  };
