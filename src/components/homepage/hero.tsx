@@ -44,24 +44,24 @@ function HomeHero() {
   const parseNumber = (val: string) =>
     parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
 
-  const totalStudents = statsData
+  const totalStudents = (statsData
     ? parseNumber(
       statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
     )
-    : 50000;
+    : 50000) || 50000;
 
-  const rawRevenue = statsData
+  const rawRevenue = (statsData
     ? parseNumber(
       statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
     )
-    : 12400000;
+    : 12400000) || 12400000;
 
-  const totalCourses = statsData
+  const totalCourses = (statsData
     ? parseNumber(
       statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
       "0",
     )
-    : 120;
+    : 120) || 120;
 
   const formatStudents = (n: number) =>
     n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k+` : `${n}+`;

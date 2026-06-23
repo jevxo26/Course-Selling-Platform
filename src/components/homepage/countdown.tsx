@@ -143,22 +143,22 @@ const CountDownTrust = () => {
   const parseNumber = (val: string) =>
     parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
 
-  const totalStudents = statsData
+  const totalStudents = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
       )
-    : 50000;
-  const rawRevenue = statsData
+    : 50000) || 50000;
+  const rawRevenue = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
       )
-    : 12400000;
-  const totalCourses = statsData
+    : 12400000) || 12400000;
+  const totalCourses = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
           "0",
       )
-    : 120;
+    : 120) || 120;
 
   const revValue = rawRevenue > 1000000 ? rawRevenue / 1000000 : rawRevenue;
   const revSuffix = rawRevenue > 1000000 ? "M+" : "+";
@@ -168,7 +168,7 @@ const CountDownTrust = () => {
     {
       id: 1,
       label: "Total Students",
-      value: totalStudents || 50000,
+      value: totalStudents,
       suffix: "+",
       icon: <Users className="w-6 h-6" />,
       gradient: "linear-gradient(135deg, #4f46e5, #6366f1)",
@@ -178,10 +178,10 @@ const CountDownTrust = () => {
     {
       id: 2,
       label: "Total Earnings",
-      value: revValue || 12.4,
+      value: revValue,
       prefix: "৳",
-      suffix: revSuffix || "M+",
-      decimals: revDecimals || 1,
+      suffix: revSuffix,
+      decimals: revDecimals,
       icon: <DollarSign className="w-6 h-6" />,
       gradient: "linear-gradient(135deg, #059669, #10b981)",
       borderColor: "#10b981",
@@ -201,7 +201,7 @@ const CountDownTrust = () => {
     {
       id: 4,
       label: "Total Courses",
-      value: totalCourses || 120,
+      value: totalCourses,
       suffix: "+",
       icon: <BookOpen className="w-6 h-6" />,
       gradient: "linear-gradient(135deg, #7c3aed, #a78bfa)",

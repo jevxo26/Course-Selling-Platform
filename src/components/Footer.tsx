@@ -58,45 +58,42 @@ function Footer() {
   const { data: statsData } = useGetStatsQuery();
 
   // Extract real values from API
-  const totalStudents = statsData
+  const totalStudents = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
       )
-    : 50000;
+    : 50000) || 50000;
 
-  const rawRevenue = statsData
+  const rawRevenue = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
       )
-    : 12400000;
+    : 12400000) || 12400000;
 
-  const totalCourses = statsData
+  const totalCourses = (statsData
     ? parseNumber(
         statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
           "0",
       )
-    : 120;
+    : 120) || 120;
 
-  const avgRating = statsData
+  const avgRating = (statsData
     ? parseFloat(
         statsData.kpis.find((k) => k.label === "Avg. Rating")?.value || "4.9",
       )
-    : 4.9;
+    : 4.9) || 4.9;
 
-  const revenueDisplay =
-    rawRevenue > 1000000
-      ? `$${(rawRevenue / 1000000).toFixed(1)}M+`
-      : `$${Math.floor(rawRevenue).toLocaleString()}+`;
+  const revenueDisplay = `৳${new Intl.NumberFormat("en-IN").format(Math.floor(rawRevenue))}+`;
 
   const stats = [
     { label: "Total distributed", value: revenueDisplay },
     {
       label: "Active students",
-      value: `${(totalStudents || 50000).toLocaleString()}+`,
+      value: `${totalStudents.toLocaleString()}+`,
     },
     {
       label: "Courses available",
-      value: `${(totalCourses || 120).toLocaleString()}+`,
+      value: `${totalCourses.toLocaleString()}+`,
     },
     {
       label: "Avg. student rating",

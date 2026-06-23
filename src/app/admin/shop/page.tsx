@@ -361,28 +361,35 @@ export default function AdminShopPage() {
                         {/* Price */}
                         <td className="px-5 py-3.5">
                           <span className="text-[13px] font-extrabold text-gray-900">
-                            ৳{Number(item.price).toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ৳
+                            {Number(item.price).toLocaleString("bn-BD", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
                           </span>
                         </td>
                         {/* Actions */}
-                        <td className="px-5 py-3.5 text-right">
-                          <button
-                            onClick={() => openEditModal(item)}
-                            className="w-8 h-8 rounded-lg border border-indigo-200 bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 active:bg-indigo-200 transition-colors mr-2 inline-flex"
-                          >
-                            <Edit size={14} />
-                          </button>
-                          <button
-                            onClick={() => openDeleteModal(item.id)}
-                            disabled={deletingId === item.id}
-                            className="w-8 h-8 rounded-lg border border-red-200 bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50 ml-auto"
-                          >
-                            {deletingId === item.id ? (
-                              <Loader2 size={13} className="animate-spin" />
-                            ) : (
-                              <Trash2 size={14} />
-                            )}
-                          </button>
+                        <td className="px-5 py-3.5">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => openEditModal(item)}
+                              className="w-8 h-8 rounded-lg border border-indigo-200 bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 active:bg-indigo-200 transition-colors"
+                            >
+                              <Edit size={14} />
+                            </button>
+
+                            <button
+                              onClick={() => openDeleteModal(item.id)}
+                              disabled={deletingId === item.id}
+                              className="w-8 h-8 rounded-lg border border-red-200 bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50"
+                            >
+                              {deletingId === item.id ? (
+                                <Loader2 size={13} className="animate-spin" />
+                              ) : (
+                                <Trash2 size={14} />
+                              )}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -419,7 +426,11 @@ export default function AdminShopPage() {
                           {item.name}
                         </p>
                         <span className="text-[13px] font-extrabold text-emerald-600 shrink-0">
-                          ৳{Number(item.price).toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          ৳
+                          {Number(item.price).toLocaleString("bn-BD", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 mt-1">
@@ -432,7 +443,6 @@ export default function AdminShopPage() {
                         ID: {item.id}
                       </p>
                     </div>
-
                     <button
                       onClick={() => openEditModal(item)}
                       className="w-9 h-9 rounded-xl border border-indigo-200 bg-indigo-50 flex items-center justify-center text-indigo-500 hover:bg-indigo-100 active:bg-indigo-200 transition-colors mr-2"
@@ -515,10 +525,11 @@ export default function AdminShopPage() {
                 </label>
                 <label className="relative cursor-pointer group">
                   <div
-                    className={`w-full h-28 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all ${previewUrl
-                      ? "border-blue-300 bg-blue-50/50"
-                      : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/30"
-                      }`}
+                    className={`w-full h-28 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all ${
+                      previewUrl
+                        ? "border-blue-300 bg-blue-50/50"
+                        : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/30"
+                    }`}
                   >
                     {previewUrl ? (
                       <img
@@ -578,7 +589,9 @@ export default function AdminShopPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, type: "instant" })}
+                    onClick={() =>
+                      setFormData({ ...formData, type: "instant" })
+                    }
                     className={`py-3 rounded-xl border-2 text-[13px] font-bold transition-all ${
                       formData.type === "instant"
                         ? "border-blue-500 bg-blue-50 text-blue-700"
@@ -605,7 +618,10 @@ export default function AdminShopPage() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <Mail size={11} className="text-slate-400" />
-                  Gmail <span className="text-slate-400 normal-case font-normal">(optional)</span>
+                  Gmail{" "}
+                  <span className="text-slate-400 normal-case font-normal">
+                    (optional)
+                  </span>
                 </label>
                 <input
                   type="email"
@@ -622,7 +638,10 @@ export default function AdminShopPage() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <KeyRound size={11} className="text-slate-400" />
-                  Password <span className="text-slate-400 normal-case font-normal">(optional, min 6 chars)</span>
+                  Password{" "}
+                  <span className="text-slate-400 normal-case font-normal">
+                    (optional, min 6 chars)
+                  </span>
                 </label>
                 <input
                   type="password"
@@ -673,7 +692,10 @@ export default function AdminShopPage() {
               {/* Description */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
-                  Description <span className="text-slate-400 normal-case font-normal">(optional)</span>
+                  Description{" "}
+                  <span className="text-slate-400 normal-case font-normal">
+                    (optional)
+                  </span>
                 </label>
                 <textarea
                   value={formData.description}
@@ -690,7 +712,10 @@ export default function AdminShopPage() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                   <span className="text-base font-bold text-slate-700">৳</span>
-                  Price <span className="text-slate-400 normal-case font-normal">(optional)</span>
+                  Price{" "}
+                  <span className="text-slate-400 normal-case font-normal">
+                    (optional)
+                  </span>
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -753,7 +778,8 @@ export default function AdminShopPage() {
                 Delete Product?
               </h3>
               <p className="text-[13px] text-slate-500 font-medium text-center leading-relaxed">
-                Are you sure you want to delete this product? This action cannot be undone and will permanently remove the item from your shop.
+                Are you sure you want to delete this product? This action cannot
+                be undone and will permanently remove the item from your shop.
               </p>
             </div>
             <div className="p-4 bg-slate-50 flex flex-col-reverse sm:flex-row items-center gap-2 border-t border-slate-100">
