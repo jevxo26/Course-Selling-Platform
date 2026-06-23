@@ -37,17 +37,24 @@ export const baseApi = createApi({
 
       if (!token && typeof window !== "undefined") {
         try {
-          const raw = localStorage.getItem("course_platform_auth");
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            token =
-              parsed?.user?.token ??
-              parsed?.user?.accessToken ??
-              parsed?.user?.access_token ??
-              parsed?.token ??
-              parsed?.accessToken ??
-              parsed?.access_token;
-            role = role ?? parsed?.user?.role ?? parsed?.role;
+          const storedToken = localStorage.getItem("token") || localStorage.getItem("access_token");
+          if (storedToken) {
+            token = storedToken;
+          }
+
+          if (!token) {
+            const raw = localStorage.getItem("course_platform_auth");
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              token =
+                parsed?.user?.token ??
+                parsed?.user?.accessToken ??
+                parsed?.user?.access_token ??
+                parsed?.token ??
+                parsed?.accessToken ??
+                parsed?.access_token;
+              role = role ?? parsed?.user?.role ?? parsed?.role;
+            }
           }
         } catch { }
       }

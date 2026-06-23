@@ -44,8 +44,8 @@ export async function uploadImageToBackend(file: File | Blob): Promise<string> {
   const form = new FormData();
   form.append("image", file);
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://course-selling-api.up.railway.app";
-  
+  const baseUrl = "https://course-selling-platform-api-production.up.railway.app";
+
   // Get token
   let token = "";
   if (typeof window !== "undefined") {
@@ -61,7 +61,7 @@ export async function uploadImageToBackend(file: File | Blob): Promise<string> {
           parsed?.accessToken ??
           parsed?.access_token ?? "";
       }
-    } catch {}
+    } catch { }
   }
 
   const response = await axios.post<{ url: string }>(

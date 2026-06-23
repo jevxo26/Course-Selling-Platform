@@ -4,6 +4,7 @@ import Link from "next/link";
 import SignupLotti from "@/components/signup/Lotti";
 import { useRegisterMutation } from "@/lib/api/authApi";
 import { uploadImageToImgBB } from "@/lib/images.upload";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -32,6 +33,7 @@ type SignupFormData = {
 };
 
 export default function SignupPage(): React.JSX.Element {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -165,7 +167,10 @@ export default function SignupPage(): React.JSX.Element {
       }).unwrap();
 
       setSuccess(true);
-      toast.success("Account created!", { id: toastId });
+      toast.success("Account created! Redirecting to login...", { id: toastId });
+      setTimeout(() => {
+        router.push('/login');
+      }, 1500);
     } catch (err) {
       const message =
         typeof err === "object" && err && "data" in err

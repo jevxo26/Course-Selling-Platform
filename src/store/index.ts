@@ -80,7 +80,7 @@ async function fetchCurrentUser(
 
     const res = await axios.get(
       (process.env.NEXT_PUBLIC_API_BASE_URL ||
-        "https://course-selling-api.up.railway.app") + "/auth/profile",
+        "https://course-selling-platform-api-production.up.railway.app") + "/auth/profile",
       {
         headers,
       },
@@ -160,9 +160,7 @@ const authFlowMiddleware: Middleware =
   (storeApi) => (next) => async (action) => {
     const result = next(action);
 
-    const isAuthSuccess =
-      authApi.endpoints.login.matchFulfilled(action) ||
-      authApi.endpoints.register.matchFulfilled(action);
+    const isAuthSuccess = authApi.endpoints.login.matchFulfilled(action);
 
     if (isAuthSuccess) {
       const token = extractToken(action.payload);
