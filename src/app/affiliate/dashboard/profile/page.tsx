@@ -12,7 +12,7 @@ export default function AffiliateProfilePage() {
     authUser?.name ?? authUser?.fullName ?? authUser?.username ?? "Affiliate"
   ).trim();
   const email = String(authUser?.email ?? "affiliate@example.com").trim();
-
+// sdfwe
   return (
     <div className="w-full min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
