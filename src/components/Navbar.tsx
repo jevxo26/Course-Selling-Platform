@@ -125,7 +125,7 @@ function Header() {
     ? "/admin/dashboard"
     : isAffiliateRole
       ? "/affiliate/dashboard"
-      : "/student/dashboard";
+      : "/student";
 
   const handleLogout = (closeCallback: () => void) => {
     if (isLoggingOut) return;
@@ -306,15 +306,7 @@ function Header() {
                             <LayoutDashboard className="w-4 h-4 text-slate-400" />
                             Dashboard
                           </Link>
-                          {!isAdminRole && (
-                            <Link
-                              href="/student/dashboard"
-                              className="flex items-center gap-2.5 px-3 py-2.5 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
-                            >
-                              <SignalIcon className="w-4 h-4 text-slate-400" />
-                              Profile
-                            </Link>
-                          )}
+
                           <button
                             type="button"
                             disabled={isLoggingOut}
@@ -619,18 +611,7 @@ function Header() {
                           : "Student Dashboard"}
                     </Link>
 
-                    {!isAdminRole && (
-                      <Link
-                        href="/student/dashboard"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
-                          <SignalIcon className="w-3.5 h-3.5 text-slate-500" />
-                        </div>
-                        Profile
-                      </Link>
-                    )}
+
 
                     <div className="my-1 h-px bg-slate-100 mx-1" />
 

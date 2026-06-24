@@ -224,7 +224,7 @@ export default function TopNavbar({
               <div className="py-1.5">
                 <button
                   onClick={() => {
-                    router.push("/student/dashboard");
+                    router.push("/student/profile");
                     setDropdownOpen(false);
                   }}
                   className="flex items-center gap-2.5 w-full px-3.5 py-2 text-[12px] text-slate-600 hover:bg-slate-50 transition-colors"
@@ -233,19 +233,6 @@ export default function TopNavbar({
                     <User className="w-3 h-3 text-slate-500" />
                   </span>
                   My Profile
-                </button>
-
-                <button
-                  onClick={() => {
-                    router.push("/student/settings");
-                    setDropdownOpen(false);
-                  }}
-                  className="flex items-center gap-2.5 w-full px-3.5 py-2 text-[12px] text-slate-600 hover:bg-slate-50 transition-colors"
-                >
-                  <span className="flex items-center justify-center w-6 h-6 rounded-md bg-slate-100">
-                    <Settings className="w-3 h-3 text-slate-500" />
-                  </span>
-                  Settings
                 </button>
               </div>
 

@@ -47,7 +47,7 @@ export default function LoginPage(): React.JSX.Element {
         } else if (userRole === "affiliate") {
           router.push("/affiliate/dashboard");
         } else {
-          router.push("/student/dashboard");
+          router.push("/student");
         }
       }
     } catch {
