@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Package, Search, ShoppingBag, Eye, Copy, Check, Mail, KeyRound, MessageCircle, Send, CheckCircle2, Clock, XCircle } from "lucide-react";
 import { useGetMyShopPurchasesQuery } from "@/lib/api/shopApi";
 
@@ -61,11 +62,27 @@ export default function MyShopsManager() {
           <div className="text-center py-12 bg-white rounded-3xl border border-slate-200">
             <p className="text-red-500 font-semibold">Failed to load purchases</p>
           </div>
+        ) : (purchases || []).length === 0 ? (
+          <div className="text-center py-24 bg-white rounded-3xl border border-slate-200 shadow-sm px-6">
+            <div className="w-20 h-20 rounded-3xl bg-blue-50 flex items-center justify-center mb-6 shadow-lg shadow-blue-100/50 mx-auto">
+              <ShoppingBag className="w-10 h-10 text-blue-600 animate-bounce" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900">No Purchased Shops</h3>
+            <p className="text-sm text-slate-500 mt-2 max-w-sm mx-auto mb-6">
+              You haven't purchased any shop items yet. Browse our shop to find premium tools and accounts!
+            </p>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[13px] font-bold hover:from-blue-500 hover:to-indigo-500 active:scale-95 transition-all shadow-md shadow-blue-200"
+            >
+              Buy Now
+            </Link>
+          </div>
         ) : filteredPurchases.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-3xl border border-slate-200 shadow-sm">
+          <div className="text-center py-24 bg-white rounded-3xl border border-slate-200 shadow-sm px-6">
             <Package className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-slate-900">No Purchases Found</h3>
-            <p className="text-sm text-slate-500 mt-1">You haven't purchased any shop items yet.</p>
+            <h3 className="text-lg font-bold text-slate-900">No Results Found</h3>
+            <p className="text-sm text-slate-500 mt-1">Try a different search term.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

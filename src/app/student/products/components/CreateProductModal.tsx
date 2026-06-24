@@ -69,11 +69,11 @@ export default function CreateProductModal({
               type="text"
               value={formData.botName}
               onChange={(e) => setFormData({ ...formData, botName: e.target.value })}
-              className="w-full px-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
+              className="w-full px-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
               placeholder="e.g. TradeBot Pro"
             />
           </div>
-
+ 
           {/* Country Codes Field */}
           <div>
             <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-2">
@@ -84,14 +84,14 @@ export default function CreateProductModal({
               type="text"
               value={formData.country}
               onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-              className="w-full px-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
+              className="w-full px-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
               placeholder="e.g. US, UK"
             />
             <p className="text-[10px] text-gray-400 mt-1 font-medium">
               Separate multiple countries with commas
             </p>
           </div>
-
+ 
           {/* Amount Field */}
           <div>
             <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-2">
@@ -107,18 +107,18 @@ export default function CreateProductModal({
                 step="0.01"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                className="w-full pl-9 pr-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
+                className="w-full pl-9 pr-4 py-3 text-[13px] font-medium text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all placeholder:text-gray-400 bg-white hover:border-gray-400"
                 placeholder="e.g. 49.99"
               />
             </div>
           </div>
-
+ 
           {/* Submit Button */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-indigo-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
             >
               {isLoading ? (
                 <>

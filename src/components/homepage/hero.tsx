@@ -3,7 +3,11 @@
 import { DollarSign, TrendingUp, Users, BarChart2, Star } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useGetStatsQuery } from "@/lib/api/statsApi";
+import {
+  useGetStatsQuery,
+  useGetAdminDashboardStatsQuery,
+  useGetStudentDashboardStatsQuery,
+} from "@/lib/api/statsApi";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -32,36 +36,71 @@ const scaleUp = {
 };
 
 const rows = [
-  { label: "Figma UI Kit", pct: 78, color: "#4f46e5", earn: "৳1,240" },
-  { label: "React Bootcamp", pct: 62, color: "#10B981", earn: "৳980" },
-  { label: "SEO Mastery", pct: 45, color: "#818cf8", earn: "৳670" },
-  { label: "Copywriting", pct: 91, color: "#F59E0B", earn: "৳1,400" },
+  { label: "Figma UI Kit", pct: 78, color: "#4f46e5", earn: "$1,240" },
+  { label: "React Bootcamp", pct: 62, color: "#10B981", earn: "$980" },
+  { label: "SEO Mastery", pct: 45, color: "#818cf8", earn: "$670" },
+  { label: "Copywriting", pct: 91, color: "#F59E0B", earn: "$1,400" },
 ];
 
 function HomeHero() {
   const { data: statsData } = useGetStatsQuery();
+  const { data: adminStats } = useGetAdminDashboardStatsQuery(undefined, { skip: true });
+  const { data: studentStats } = useGetStudentDashboardStatsQuery(undefined, { skip: true });
 
   const parseNumber = (val: string) =>
     parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
 
-  const totalStudents = (statsData
-    ? parseNumber(
-      statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
-    )
-    : 50000) || 50000;
+  const totalStudents = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "Users" ||
+        k.label.toLowerCase().includes("student") ||
+        k.label.toLowerCase().includes("user")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
 
-  const rawRevenue = (statsData
-    ? parseNumber(
-      statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
-    )
-    : 12400000) || 12400000;
+  const rawRevenue = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "DollarSign" ||
+        k.label.toLowerCase().includes("revenue") ||
+        k.label.toLowerCase().includes("sale")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
 
-  const totalCourses = (statsData
-    ? parseNumber(
-      statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
-      "0",
-    )
-    : 120) || 120;
+  const totalCourses = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "GraduationCap" ||
+        k.label.toLowerCase().includes("course")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
+
+  const avgRoi = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.label.toLowerCase().includes("roi") ||
+        k.label.toLowerCase().includes("return")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
+
+  const avgRating = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.label.toLowerCase().includes("rating") ||
+        k.label.toLowerCase().includes("stars")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
 
   const formatStudents = (n: number) =>
     n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k+` : `${n}+`;
@@ -77,16 +116,30 @@ function HomeHero() {
     {
       icon: Users,
       label: "Students",
-      value: statsData ? formatStudents(totalStudents) : "50k+",
+      value: formatStudents(totalStudents),
     },
-    { icon: TrendingUp, label: "Avg. ROI", value: "312%" },
-    { icon: Star, label: "Rating", value: "4.9" },
+    { icon: TrendingUp, label: "Avg. ROI", value: `${avgRoi}%` },
+    { icon: Star, label: "Rating", value: `${avgRating}` },
     {
       icon: BarChart2,
       label: "Courses",
-      value: statsData ? `${totalCourses}+` : "120+",
+      value: `${totalCourses}+`,
     },
   ];
+
+  const rowsColor = ["#4f46e5", "#10B981", "#818cf8", "#F59E0B"];
+  const dynamicRows = (statsData?.topCourses && statsData.topCourses.length > 0)
+    ? statsData.topCourses.slice(0, 4).map((c, idx) => {
+      const rev = parseNumber(c.revenue);
+      const pct = Math.min(100, Math.max(20, Math.round((rev / (rawRevenue || 1)) * 500))) || 60;
+      return {
+        label: c.title,
+        pct,
+        color: rowsColor[idx % rowsColor.length],
+        earn: typeof c.revenue === 'string' ? c.revenue.replace('$', '৳') : `৳${c.revenue}`,
+      };
+    })
+    : rows;
 
   return (
     <section
@@ -149,8 +202,10 @@ function HomeHero() {
               custom={0}
             >
               <span
-                className="px-4 py-1.5 rounded-full text-black text-xs font-black tracking-widest shadow-md"
-
+                className="px-4 py-1.5 rounded-full text-xs font-black tracking-widest text-white shadow-md"
+                style={{
+                  background: "linear-gradient(135deg, #0047FF, ##0047FF)",
+                }}
               >
                 FINANCIAL EVOLUTION
               </span>
@@ -195,7 +250,7 @@ function HomeHero() {
 
             {/* buttons */}
             <motion.div
-              className="grid grid-cols-1 items-stretch sm:items-center gap-3 pt-1"
+              className="grid grid-cols-2 items-stretch sm:items-center gap-3 pt-1"
               variants={fadeUp}
               initial="hidden"
               animate="show"
@@ -305,12 +360,12 @@ function HomeHero() {
                       },
                       {
                         label: "This Month",
-                        val: "৳4,290",
+                        val: statsData ? formatRevenue(rawRevenue * 0.35) : "৳4,290",
                         color: "text-indigo-400",
                       },
                       {
                         label: "Pending",
-                        val: "৳830",
+                        val: statsData ? formatRevenue(rawRevenue * 0.07) : "৳830",
                         color: "text-yellow-400",
                       },
                     ].map(({ label, val, color }) => (
@@ -331,7 +386,7 @@ function HomeHero() {
                     <p className="text-[10px] text-white/40 uppercase tracking-widest font-semibold">
                       Course Earnings
                     </p>
-                    {rows.map(({ label, pct, color, earn }, i) => (
+                    {dynamicRows.map(({ label, pct, color, earn }, i) => (
                       <motion.div
                         key={label}
                         className="space-y-1"
@@ -431,7 +486,7 @@ function HomeHero() {
                       background: "linear-gradient(135deg, #4f46e5, #6366f1)",
                     }}
                   >
-                    <span className="text-2xl">৳</span>
+                    <span className="text-xl font-black text-white">৳</span>
                   </div>
                 </div>
                 <div>
@@ -439,7 +494,7 @@ function HomeHero() {
                     Weekly Payout
                   </p>
                   <p className="text-xl font-extrabold text-indigo-600 tracking-tight">
-                    ৳4,290.00
+                    {statsData ? `${formatRevenue(rawRevenue * 0.35)}` : ""}
                   </p>
                 </div>
               </motion.div>
@@ -460,7 +515,7 @@ function HomeHero() {
                 }}
               >
                 <TrendingUp className="h-3.5 w-3.5" />
-                <span className="text-xs font-bold">+312% ROI</span>
+                <span className="text-xs font-bold">+{statsData ? `${avgRoi}%` : "312%"} ROI</span>
               </motion.div>
             </div>
           </motion.div>

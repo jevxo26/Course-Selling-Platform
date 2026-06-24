@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
+
 import {
   BookOpen,
   Calendar,
@@ -878,51 +880,73 @@ export default function StudentCoursesManager() {
                 </div>
 
                 {/* Search */}
-                <div className="lg:w-96 xl:w-[420px] shrink-0">
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-gray-400 mb-2">
-                    Search Courses
-                  </label>
-                  <div className="flex h-11 items-center rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 transition-all focus-within:border-violet-400 focus-within:bg-white focus-within:shadow-lg focus-within:shadow-violet-100/50">
-                    <Search className="h-4 w-4 text-gray-400 shrink-0" />
-                    <input
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                        setPage(1);
-                      }}
-                      placeholder="Search by title, status, ID…"
-                      className="ml-3 flex-1 bg-transparent text-[13px] font-medium text-gray-700 placeholder:text-gray-400 outline-none"
-                    />
-                    {search && (
-                      <button
-                        onClick={() => {
-                          setSearch("");
+                {!isFetching && allItems.length > 0 && (
+                  <div className="lg:w-96 xl:w-[420px] shrink-0">
+                    <label className="block text-[11px] font-black uppercase tracking-widest text-gray-400 mb-2">
+                      Search Courses
+                    </label>
+                    <div className="flex h-11 items-center rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 transition-all focus-within:border-violet-400 focus-within:bg-white focus-within:shadow-lg focus-within:shadow-violet-100/50">
+                      <Search className="h-4 w-4 text-gray-400 shrink-0" />
+                      <input
+                        value={search}
+                        onChange={(e) => {
+                          setSearch(e.target.value);
                           setPage(1);
                         }}
-                        aria-label="Clear search"
-                        className="ml-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 transition-colors shrink-0"
-                      >
-                        <X size={12} />
-                      </button>
+                        placeholder="Search by title, status, ID…"
+                        className="ml-3 flex-1 bg-transparent text-[13px] font-medium text-gray-700 placeholder:text-gray-400 outline-none"
+                      />
+                      {search && (
+                        <button
+                          onClick={() => {
+                            setSearch("");
+                            setPage(1);
+                          }}
+                          aria-label="Clear search"
+                          className="ml-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 transition-colors shrink-0"
+                        >
+                          <X size={12} />
+                        </button>
+                      )}
+                    </div>
+                    {search && (
+                      <p className="mt-2 text-[11px] text-gray-400 font-medium">
+                        Showing{" "}
+                        <span className="font-bold text-violet-600">
+                          {items.length}
+                        </span>{" "}
+                        result{items.length !== 1 ? "s" : ""}
+                      </p>
                     )}
                   </div>
-                  {search && (
-                    <p className="mt-2 text-[11px] text-gray-400 font-medium">
-                      Showing{" "}
-                      <span className="font-bold text-violet-600">
-                        {items.length}
-                      </span>{" "}
-                      result{items.length !== 1 ? "s" : ""}
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Table Card ─────────────────────────────────────────────────────── */}
-        <div className="rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+        {/* ── Table Card / Empty State ────────────────────────────────────────── */}
+        {!isFetching && !isError && allItems.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center p-8 py-16 bg-white border border-gray-100 rounded-3xl shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500" />
+            <div className="w-20 h-20 rounded-3xl bg-violet-50 flex items-center justify-center mb-6 shadow-lg shadow-violet-100/50">
+              <GraduationCap className="h-10 w-10 text-violet-600 animate-bounce" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-2">
+              Start Your Learning Journey
+            </h2>
+            <p className="text-[13px] text-gray-500 max-w-md mb-8 leading-relaxed">
+              You haven&apos;t enrolled in any courses yet. Explore our wide range of premium courses and start learning today!
+            </p>
+            <Link
+              href="/courses"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-[12px] font-bold hover:from-violet-500 hover:to-indigo-500 active:scale-95 transition-all shadow-md shadow-violet-200"
+            >
+              Browse Courses
+            </Link>
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden">
           {/* Card header */}
           <div className="px-5 py-4 sm:px-6 border-b border-gray-100 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
@@ -1209,6 +1233,7 @@ export default function StudentCoursesManager() {
             </div>
           )}
         </div>
+      )}
       </div>
 
       {/* Details Modal */}

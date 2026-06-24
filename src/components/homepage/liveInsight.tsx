@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useLandingWithdrawLiveQuery } from "@/lib/api/landing/withdraw-live";
 import { useLandingEarningLiveQuery } from "@/lib/api/landing/earning-live";
+import { useGetStatsQuery } from "@/lib/api/statsApi";
 import Image from "next/image";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -129,108 +130,6 @@ function normalizeEarningLiveItem(
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-
-const allEarners: Omit<EarningItem, "id">[] = [
-  {
-    name: "John Doe",
-    course: "UI Architecture Path",
-    amount: "৳120.00",
-    avatar: "https://i.pravatar.cc/80?img=11",
-  },
-  {
-    name: "Emma",
-    course: "Agency Mastery",
-    amount: "৳160.41",
-    avatar: "https://i.pravatar.cc/80?img=47",
-  },
-  {
-    name: "Chloe",
-    course: "UI Architecture",
-    amount: "৳100.53",
-    avatar: "https://i.pravatar.cc/80?img=45",
-  },
-  {
-    name: "Sarah K.",
-    course: "Design Systems",
-    amount: "৳88.20",
-    avatar: "https://i.pravatar.cc/80?img=23",
-  },
-  {
-    name: "Liam",
-    course: "Branding Bootcamp",
-    amount: "৳74.00",
-    avatar: "https://i.pravatar.cc/80?img=3",
-  },
-  {
-    name: "Nina",
-    course: "Freelance Fast-Track",
-    amount: "৳210.00",
-    avatar: "https://i.pravatar.cc/80?img=49",
-  },
-  {
-    name: "Omar",
-    course: "Product Design",
-    amount: "৳95.50",
-    avatar: "https://i.pravatar.cc/80?img=18",
-  },
-  {
-    name: "Zara",
-    course: "Motion Design",
-    amount: "৳135.00",
-    avatar: "https://i.pravatar.cc/80?img=25",
-  },
-];
-
-const allWithdrawers: Omit<WithdrawalItem, "id">[] = [
-  {
-    name: "Michael",
-    status: "Withdrawal Initiated",
-    amount: "৳957.34",
-    avatar: "https://i.pravatar.cc/80?img=12",
-  },
-  {
-    name: "Alex Chen",
-    status: "Withdrawal Initiated",
-    amount: "৳300.00",
-    avatar: "https://i.pravatar.cc/80?img=15",
-  },
-  {
-    name: "Alex",
-    status: "Withdrawal Initiated",
-    amount: "৳540.62",
-    avatar: "https://i.pravatar.cc/80?img=60",
-  },
-  {
-    name: "Michael",
-    status: "Withdrawal Initiated",
-    amount: "৳169.52",
-    avatar: "https://i.pravatar.cc/80?img=33",
-  },
-  {
-    name: "Grace",
-    status: "Withdrawal Initiated",
-    amount: "৳415.00",
-    avatar: "https://i.pravatar.cc/80?img=29",
-  },
-  {
-    name: "Carlos",
-    status: "Withdrawal Initiated",
-    amount: "৳880.00",
-    avatar: "https://i.pravatar.cc/80?img=7",
-  },
-  {
-    name: "Priya",
-    status: "Withdrawal Initiated",
-    amount: "৳225.30",
-    avatar: "https://i.pravatar.cc/80?img=44",
-  },
-  {
-    name: "Yuki",
-    status: "Withdrawal Initiated",
-    amount: "৳310.00",
-    avatar: "https://i.pravatar.cc/80?img=38",
-  },
-];
 
 const ROW_H = 58;
 const GAP = 8;
@@ -373,6 +272,21 @@ let _idCtr = 100;
 const LiveInsight = () => {
   const earningLive = useLandingEarningLiveQuery();
   const withdrawLive = useLandingWithdrawLiveQuery();
+  const { data: statsData } = useGetStatsQuery();
+
+  const parseNumber = (val: string) =>
+    parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
+
+  const rawRevenue = useMemo(() => {
+    if (!statsData?.kpis) return 12483035;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "DollarSign" ||
+        k.label.toLowerCase().includes("revenue") ||
+        k.label.toLowerCase().includes("sale")
+    );
+    return found ? parseNumber(found.value) : 12483035;
+  }, [statsData]);
   
   const apiWithdrawers = useMemo(() => {
     const list = extractWithdrawLiveList(withdrawLive.data);
@@ -388,20 +302,23 @@ const LiveInsight = () => {
       .filter((x): x is Omit<EarningItem, "id"> => Boolean(x));
   }, [earningLive.data]);
 
-  const withdrawersRef = useRef<Omit<WithdrawalItem, "id">[]>(allWithdrawers);
-  const earnersRef = useRef<Omit<EarningItem, "id">[]>(allEarners);
+  const withdrawersRef = useRef<Omit<WithdrawalItem, "id">[]>([]);
+  const earnersRef = useRef<Omit<EarningItem, "id">[]>([]);
 
-  const earningFeed = useConveyorFeed<EarningItem>(
-    allEarners.slice(0, VISIBLE).map((d, i) => ({ ...d, id: i + 1 })),
-  );
-  const withdrawalFeed = useConveyorFeed<WithdrawalItem>(
-    allWithdrawers.slice(0, VISIBLE).map((d, i) => ({ ...d, id: i + 1 })),
-  );
+  const earningFeed = useConveyorFeed<EarningItem>([]);
+  const withdrawalFeed = useConveyorFeed<WithdrawalItem>([]);
 
-  const [total, setTotal] = useState(12_483_035);
+  const [total, setTotal] = useState(12483035);
   const [totalKey, setTotalKey] = useState(0);
   const eIdxRef = useRef(VISIBLE);
   const wIdxRef = useRef(VISIBLE);
+
+  useEffect(() => {
+    if (rawRevenue) {
+      setTotal(rawRevenue);
+      setTotalKey((k) => k + 1);
+    }
+  }, [rawRevenue]);
 
   useEffect(() => {
     if (apiWithdrawers.length === 0) return;
@@ -430,26 +347,25 @@ const LiveInsight = () => {
   useEffect(() => {
     const t = setInterval(() => {
       const id = ++_idCtr;
-      const earners = earnersRef.current.length > 0 ? earnersRef.current : allEarners;
-      const newE = { ...earners[eIdxRef.current % earners.length], id };
-      
-      const withdrawers =
-        withdrawersRef.current.length > 0
-          ? withdrawersRef.current
-          : allWithdrawers;
+      const earners = earnersRef.current;
+      const withdrawers = withdrawersRef.current;
 
-      const newW = {
-        ...withdrawers[wIdxRef.current % withdrawers.length],
-        id: id + 1,
-      };
+      if (earners.length > 0) {
+        const newE = { ...earners[eIdxRef.current % earners.length], id };
+        earningFeed.push(newE);
+        setTotal((prev) => prev + parseFloat(newE.amount.replace(/[^0-9.-]+/g, "")));
+        setTotalKey((k) => k + 1);
+        eIdxRef.current++;
+      }
 
-      earningFeed.push(newE);
-      withdrawalFeed.push(newW);
-
-      setTotal((prev) => prev + parseFloat(newE.amount.replace(/[^0-9.-]+/g, "")));
-      setTotalKey((k) => k + 1);
-      eIdxRef.current++;
-      wIdxRef.current++;
+      if (withdrawers.length > 0) {
+        const newW = {
+          ...withdrawers[wIdxRef.current % withdrawers.length],
+          id: id + 1,
+        };
+        withdrawalFeed.push(newW);
+        wIdxRef.current++;
+      }
     }, INTERVAL);
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps

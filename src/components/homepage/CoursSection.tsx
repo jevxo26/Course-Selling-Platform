@@ -12,7 +12,6 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-// ── card ─────────────────────────────────────────────────────────────────────
 function CourseCard({
   course,
   index,
@@ -31,7 +30,7 @@ function CourseCard({
         delay: index * 0.15,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="group bg-white rounded-[1.35rem] overflow-hidden shadow-[0_2px_16px_rgba(0,0,0,0.07)] hover:shadow-[0_8px_40px_rgba(0,82,204,0.13)] transition-shadow duration-500 flex flex-col"
+      className="group bg-white rounded-[1.5rem] overflow-hidden border border-slate-100/90 shadow-[0_4px_25px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,82,204,0.08)] hover:-translate-y-1.5 transition-all duration-500 flex flex-col"
     >
       {/* image */}
       <div
@@ -54,12 +53,14 @@ function CourseCard({
           }}
         />
         {/* vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
 
         {/* potential badge */}
         <motion.span
-          className="absolute top-3.5 right-3.5 text-[11px] font-extrabold px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm"
-          style={{ backgroundColor: course.tagBg, color: course.tagColor }}
+          className="absolute top-4 right-4 text-[10.5px] font-black px-3.5 py-1.5 rounded-full shadow-lg text-white"
+          style={{
+            background: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
+          }}
           initial={{ opacity: 0, y: -6, scale: 0.85 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{
@@ -76,50 +77,55 @@ function CourseCard({
       {/* body */}
       <div className="p-6 flex flex-col flex-1">
         {/* category */}
-        <p
-          className="text-[10.5px] font-extrabold tracking-[0.14em] mb-2.5 uppercase"
-          style={{ color: course.categoryColor }}
+        <span
+          className="inline-block text-[9.5px] font-extrabold tracking-widest uppercase px-2.5 py-1 rounded-md bg-blue-50 text-[#0052CC] mb-3.5 self-start"
         >
           {course.category}
-        </p>
+        </span>
 
         {/* title */}
-        <h3 className="text-[17px] font-bold text-gray-900 leading-[1.4] mb-4 flex-1">
+        <h3 className="text-[17px] font-extrabold text-slate-800 leading-[1.4] mb-3.5 flex-1">
           {course.title}
         </h3>
 
         {/* meta row */}
-        <div className="flex items-center gap-4 text-[12px] text-gray-400 font-medium mb-5">
-          <span className="flex items-center gap-1">
-            <Users className="w-3.5 h-3.5" />
-            {course.enrollmentCount || 0} students
+        <div className="flex items-center gap-4 text-[12px] text-slate-400 font-medium mb-4.5">
+          <span className="flex items-center gap-1.5">
+            <Users className="w-4 h-4 text-slate-400" />
+            {course.students} students
           </span>
-          <span className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
+          <span className="flex items-center gap-1.5">
+            <Clock className="w-4 h-4 text-slate-400" />
             {course.duration}
           </span>
         </div>
 
         {/* divider */}
-        <div className="h-px bg-gray-100 mb-4" />
+        <div className="h-px bg-slate-100 mb-4" />
 
         {/* price + rating */}
         <div className="flex items-center justify-between mb-5">
-          <span className="text-[22px] font-extrabold text-gray-900 tracking-tight">
+          <span className="text-[23px] font-black text-slate-900 tracking-tight">
             {course.price}
           </span>
-          <span className="flex items-center gap-1 text-[13px] font-semibold text-amber-500">
+          <div className="flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100 text-[13px] font-bold text-amber-700">
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             {course.rating}
-          </span>
+          </div>
         </div>
 
         {/* enroll button */}
-        <Link href={`/courses/${course.id}`}>
+        <Link href={`/courses/${course.id}`} className="mt-auto">
           <motion.button
-            className="w-full py-3 rounded-xl text-[14px] font-bold text-[#0052CC] tracking-wide transition-colors duration-200"
-            style={{ backgroundColor: "#EEF2FF" }}
-            whileHover={{ backgroundColor: "#DBEAFE" }}
+            className="w-full py-3.5 rounded-xl text-[14px] font-extrabold text-white tracking-wide transition-all duration-300 shadow-sm"
+            style={{
+              background: "linear-gradient(135deg, #0052CC 0%, #1d4ed8 100%)",
+            }}
+            whileHover={{
+              scale: 1.01,
+              boxShadow: "0 6px 20px rgba(0, 82, 204, 0.25)",
+              background: "linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)",
+            }}
             whileTap={{ scale: 0.98 }}
           >
             Enroll Now
@@ -145,20 +151,22 @@ const CourseSection = () => {
     ];
     const colorSet = colors[idx % colors.length];
 
+    const coursePrice = Number(c.price) || 0;
+    const ratingVal = c.metadata?.rating || "5.0";
+    const durationVal = c.metadata?.duration || "Self-paced";
+
     return {
       id: c.id,
-      tag: Number(c.price) > 100 ? "৳10k+/mo Potential" : "৳2k+/mo Potential",
+      tag: c.metadata?.potential || (coursePrice > 5000 ? "" : ""),
       tagColor: colorSet.tagColor,
       tagBg: colorSet.tagBg,
       category: c.category?.name || "GENERAL",
       categoryColor: "#0052CC",
       title: c.title,
-      price: `৳${c.price}`,
-      rating: "4.9",
-      students: c.enrollmentCount
-        ? `${(c.enrollmentCount / 1000).toFixed(1)}k`
-        : "1.2k",
-      duration: "48h",
+      price: c.price ? `৳${c.price}` : "Free",
+      rating: ratingVal,
+      students: c.enrollmentCount || 0,
+      duration: durationVal,
       imageBg: colorSet.imageBg,
       imageUrl:
         c.thumbnail ||
@@ -171,7 +179,7 @@ const CourseSection = () => {
   return (
     <section
       ref={ref}
-      className={`py-10 md:py-13 ${plusJakarta.className}`}
+      className={`py-12 md:py-16 ${plusJakarta.className}`}
       style={{
         background:
           "linear-gradient(135deg, #f8f9ff 0%, #f0f1ff 40%, #eef0ff 100%)",
@@ -187,14 +195,11 @@ const CourseSection = () => {
         >
           {/* left */}
           <div className="w-full">
-            <h2
-              className="font-extrabold text-gray-900 tracking-tight leading-[1.1]"
-              style={{ fontSize: "clamp(2rem, 6vw, 2rem)" }}
-            >
-              Master Your Future
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Master Your <span className="text-[#0052CC]">Future</span>
             </h2>
 
-            <p className="text-gray-400 mt-2 text-sm sm:text-[12px] font-medium max-w-[260px] sm:max-w-none">
+            <p className="text-slate-500 mt-3 text-base md:text-lg font-medium max-w-xl">
               Curated paths to high-income mastery.
             </p>
           </div>

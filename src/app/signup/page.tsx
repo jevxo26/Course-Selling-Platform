@@ -172,12 +172,7 @@ export default function SignupPage(): React.JSX.Element {
         router.push('/login');
       }, 1500);
     } catch (err) {
-      const message =
-        typeof err === "object" && err && "data" in err
-          ? (err as any).data?.message || "Registration failed"
-          : err instanceof Error
-            ? err.message
-            : "Registration failed";
+      const message = getApiErrorMessage(err);
       toast.error(message, { id: toastId });
     }
   };

@@ -143,26 +143,48 @@ const CountDownTrust = () => {
   const parseNumber = (val: string) =>
     parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
 
-  const totalStudents = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
-      )
-    : 50000) || 50000;
-  const rawRevenue = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
-      )
-    : 12400000) || 12400000;
-  const totalCourses = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
-          "0",
-      )
-    : 120) || 120;
+  const totalStudents = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "Users" ||
+        k.label.toLowerCase().includes("student") ||
+        k.label.toLowerCase().includes("user")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
 
-  const revValue = rawRevenue > 1000000 ? rawRevenue / 1000000 : rawRevenue;
-  const revSuffix = rawRevenue > 1000000 ? "M+" : "+";
-  const revDecimals = rawRevenue > 1000000 ? 1 : 0;
+  const rawRevenue = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "DollarSign" ||
+        k.label.toLowerCase().includes("revenue") ||
+        k.label.toLowerCase().includes("sale")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
+
+  const totalCourses = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.icon === "GraduationCap" ||
+        k.label.toLowerCase().includes("course")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
+
+  const successRate = (() => {
+    if (!statsData?.kpis) return 0;
+    const found = statsData.kpis.find(
+      (k) =>
+        k.label.toLowerCase().includes("success") ||
+        k.label.toLowerCase().includes("rate") ||
+        k.label.toLowerCase().includes("trend")
+    );
+    return found ? parseNumber(found.value) : 0;
+  })();
 
   const stats: StatItem[] = [
     {
@@ -171,32 +193,32 @@ const CountDownTrust = () => {
       value: totalStudents,
       suffix: "+",
       icon: <Users className="w-6 h-6" />,
-      gradient: "linear-gradient(135deg, #4f46e5, #6366f1)",
+      gradient: "linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)",
       borderColor: "#6366f1",
-      glowColor: "rgba(99,102,241,0.12)",
+      glowColor: "rgba(99, 102, 241, 0.15)",
     },
     {
       id: 2,
       label: "Total Earnings",
-      value: revValue,
+      value: rawRevenue >= 1000000 ? parseFloat((rawRevenue / 1000000).toFixed(1)) : rawRevenue,
       prefix: "৳",
-      suffix: revSuffix,
-      decimals: revDecimals,
-      icon: <DollarSign className="w-6 h-6" />,
-      gradient: "linear-gradient(135deg, #059669, #10b981)",
+      suffix: rawRevenue >= 1000000 ? "M+" : "+",
+      decimals: rawRevenue >= 1000000 ? 1 : 0,
+      icon: <span className="text-xl font-bold">৳</span>,
+      gradient: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
       borderColor: "#10b981",
-      glowColor: "rgba(16,185,129,0.12)",
+      glowColor: "rgba(16, 185, 129, 0.15)",
     },
     {
       id: 3,
       label: "Success Rate",
-      value: 94.2,
+      value: successRate,
       suffix: "%",
       decimals: 1,
       icon: <TrendingUp className="w-6 h-6" />,
-      gradient: "linear-gradient(135deg, #d97706, #f59e0b)",
+      gradient: "linear-gradient(135deg, #d97706 0%, #f59e0b 100%)",
       borderColor: "#f59e0b",
-      glowColor: "rgba(245,158,11,0.12)",
+      glowColor: "rgba(245, 158, 11, 0.15)",
     },
     {
       id: 4,
@@ -204,9 +226,9 @@ const CountDownTrust = () => {
       value: totalCourses,
       suffix: "+",
       icon: <BookOpen className="w-6 h-6" />,
-      gradient: "linear-gradient(135deg, #7c3aed, #a78bfa)",
-      borderColor: "#a78bfa",
-      glowColor: "rgba(167,139,250,0.12)",
+      gradient: "linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)",
+      borderColor: "#8b5cf6",
+      glowColor: "rgba(139, 92, 246, 0.15)",
     },
   ];
 
@@ -324,7 +346,7 @@ const CountDownTrust = () => {
                 stiffness: 220,
               }}
             >
-              +50k
+              +{totalStudents >= 1000 ? `${(totalStudents / 1000).toFixed(totalStudents % 1000 === 0 ? 0 : 1)}k` : totalStudents}
             </motion.div>
           </div>
 
@@ -338,7 +360,8 @@ const CountDownTrust = () => {
             <span className="text-slate-300 mr-1">"</span>
             Join{" "}
             <span className="font-black text-indigo-600">
-              50k+ successful students
+              {totalStudents >= 1000 ? `${(totalStudents / 1000).toFixed(totalStudents % 1000 === 0 ? 0 : 1)}k+` : `${totalStudents}+`}{" "}
+              successful students
             </span>{" "}
             transforming their future today.
             <span className="text-slate-300 ml-1">"</span>
