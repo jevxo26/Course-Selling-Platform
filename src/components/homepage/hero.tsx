@@ -250,7 +250,7 @@ function HomeHero() {
 
             {/* buttons */}
             <motion.div
-              className="grid grid-cols-2 items-stretch sm:items-center gap-3 pt-1"
+              className="grid grid-cols-1 items-stretch sm:items-center gap-3 pt-1"
               variants={fadeUp}
               initial="hidden"
               animate="show"
