@@ -222,12 +222,12 @@ export default function TopNavbar({
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
-                    router.push("/dashboard/profile");
+                    router.push("/admin/settings");
                   }}
                   className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-zinc-700 hover:bg-zinc-50 transition-colors"
                 >
-                  <User className="w-4 h-4 text-zinc-400" />
-                  Profile
+                  <Settings className="w-4 h-4 text-zinc-400" />
+                  Settings
                 </button>
               </div>
 

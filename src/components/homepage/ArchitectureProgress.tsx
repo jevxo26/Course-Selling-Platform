@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ChevronDown, TrendingUp, TrendingDown } from "lucide-react";
+import { useGetStatsQuery } from "@/lib/api/statsApi";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -51,6 +52,21 @@ function AnimatedDollar({
 const ArchitectureProgress = () => {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  const { data: statsData, isLoading } = useGetStatsQuery();
+
+  const getKpiValue = (label: string) => {
+    if (!statsData?.kpis) return "0";
+    return statsData.kpis.find((k) => k.label === label)?.value || "0";
+  };
+
+  const beforeIncome = getKpiValue("Average Starting Income");
+  const afterIncome = getKpiValue("Average Current Income");
+  const growth = getKpiValue("Average Income Jump");
+
+  const beforeText = isLoading ? "..." : `৳${beforeIncome}/mo`;
+  const afterText = isLoading ? "..." : `৳${afterIncome}/mo`;
+  const growthText = isLoading ? "..." : `+৳${growth}`;
 
   return (
     <section
@@ -122,7 +138,7 @@ const ArchitectureProgress = () => {
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <AnimatedDollar
-                  value="৳1,200/mo"
+                  value={beforeText}
                   isInView={isInView}
                   delay={0.3}
                 />
@@ -168,7 +184,7 @@ const ArchitectureProgress = () => {
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <AnimatedDollar
-                  value="৳7,850/mo"
+                  value={afterText}
                   isInView={isInView}
                   delay={0.65}
                 />
@@ -293,7 +309,7 @@ const ArchitectureProgress = () => {
               <p className="text-[10px] font-semibold text-white/70 leading-none mb-0.5">
                 Avg. Income Jump
               </p>
-              <p className="text-base font-extrabold leading-none">+৳6,650</p>
+              <p className="text-base font-extrabold leading-none">{growthText}</p>
             </motion.div>
           </motion.div>
         </div>

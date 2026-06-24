@@ -23,6 +23,7 @@ import {
   PieChart,
   BookOpen,
   Settings,
+  Home,
 } from "lucide-react";
 import { LiaCloudShowersHeavySolid } from "react-icons/lia";
 import { useLogoutMutation } from "@/lib/api/authApi";
@@ -288,6 +289,17 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       <div className="flex-shrink-0 px-3 pb-4 pt-1">
         {/* Divider */}
         <div className="mb-4 h-px bg-slate-100" />
+
+        {/* Back to Home */}
+        <Link
+          href="/"
+          className="group flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-none bg-transparent px-2.5 py-2 text-slate-500 transition-all duration-[180ms] hover:bg-slate-100 hover:text-slate-700 mb-1"
+        >
+          <span className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-lg bg-slate-50 transition-all duration-[180ms] group-hover:bg-slate-200">
+            <Home size={13} />
+          </span>
+          <span className="text-[12px] font-semibold">Back to Home</span>
+        </Link>
 
         {/* Logout */}
         <button

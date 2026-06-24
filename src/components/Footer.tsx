@@ -55,49 +55,34 @@ function Footer() {
   )
     return null;
 
-  const { data: statsData } = useGetStatsQuery();
+  const { data: statsData, isLoading } = useGetStatsQuery();
 
-  // Extract real values from API
-  const totalStudents = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Active Students")?.value || "0",
-      )
-    : 50000) || 50000;
+  // Extract real values from API without hardcoded fallbacks
+  const getKpiValue = (label: string) => {
+    if (!statsData?.kpis) return "0";
+    return statsData.kpis.find((k) => k.label === label)?.value || "0";
+  };
 
-  const rawRevenue = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Total Revenue")?.value || "0",
-      )
-    : 12400000) || 12400000;
+  const totalStudents = parseNumber(getKpiValue("Active Students"));
+  const rawRevenue = parseNumber(getKpiValue("Total Revenue"));
+  const totalCourses = parseNumber(getKpiValue("Published Courses"));
+  const avgRating = parseFloat(getKpiValue("Avg. Rating")) || 0;
 
-  const totalCourses = (statsData
-    ? parseNumber(
-        statsData.kpis.find((k) => k.label === "Published Courses")?.value ||
-          "0",
-      )
-    : 120) || 120;
-
-  const avgRating = (statsData
-    ? parseFloat(
-        statsData.kpis.find((k) => k.label === "Avg. Rating")?.value || "4.9",
-      )
-    : 4.9) || 4.9;
-
-  const revenueDisplay = `৳${new Intl.NumberFormat("en-IN").format(Math.floor(rawRevenue))}+`;
+  const revenueDisplay = isLoading ? "..." : `৳${new Intl.NumberFormat("en-IN").format(Math.floor(rawRevenue))}+`;
 
   const stats = [
     { label: "Total distributed", value: revenueDisplay },
     {
       label: "Active students",
-      value: `${totalStudents.toLocaleString()}+`,
+      value: isLoading ? "..." : `${totalStudents.toLocaleString()}+`,
     },
     {
       label: "Courses available",
-      value: `${totalCourses.toLocaleString()}+`,
+      value: isLoading ? "..." : `${totalCourses.toLocaleString()}+`,
     },
     {
       label: "Avg. student rating",
-      value: `${avgRating.toFixed(1)} / 5.0`,
+      value: isLoading ? "..." : `${avgRating.toFixed(1)} / 5.0`,
     },
   ];
 

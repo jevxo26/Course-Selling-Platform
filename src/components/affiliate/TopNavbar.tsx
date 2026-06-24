@@ -230,7 +230,7 @@ export default function TopNavbar({
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
-                    // router.push("/affiliate/dashboard/profile");
+                    router.push("/affiliate/dashboard/profile");
                   }}
                   className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-slate-700 hover:bg-slate-50 transition-colors"
                 >

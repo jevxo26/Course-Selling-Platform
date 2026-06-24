@@ -10,6 +10,7 @@ import {
   CreditCard,
   X,
   Sparkles,
+  Home,
 } from "lucide-react";
 import Image from "next/image";
 import { useLogoutMutation } from "@/lib/api/authApi";
@@ -174,7 +175,15 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* Sign out */}
-      <div className="mt-4 pt-4 border-t border-slate-200">
+      <div className="mt-4 pt-4 border-t border-slate-200 flex flex-col gap-2">
+        <Link
+          href="/"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-all duration-150"
+        >
+          <Home size={16} className="shrink-0" />
+          <span className="truncate">Back to Home</span>
+        </Link>
+
         <button
           onClick={async () => {
             if (isLoggingOut) return;

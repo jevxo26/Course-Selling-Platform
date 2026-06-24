@@ -278,14 +278,14 @@ const LiveInsight = () => {
     parseFloat(val.replace(/[^0-9.-]+/g, "")) || 0;
 
   const rawRevenue = useMemo(() => {
-    if (!statsData?.kpis) return 12483035;
+    if (!statsData?.kpis) return 0;
     const found = statsData.kpis.find(
       (k) =>
         k.icon === "DollarSign" ||
         k.label.toLowerCase().includes("revenue") ||
         k.label.toLowerCase().includes("sale")
     );
-    return found ? parseNumber(found.value) : 12483035;
+    return found ? parseNumber(found.value) : 0;
   }, [statsData]);
   
   const apiWithdrawers = useMemo(() => {
@@ -308,7 +308,7 @@ const LiveInsight = () => {
   const earningFeed = useConveyorFeed<EarningItem>([]);
   const withdrawalFeed = useConveyorFeed<WithdrawalItem>([]);
 
-  const [total, setTotal] = useState(12483035);
+  const [total, setTotal] = useState(0);
   const [totalKey, setTotalKey] = useState(0);
   const eIdxRef = useRef(VISIBLE);
   const wIdxRef = useRef(VISIBLE);
